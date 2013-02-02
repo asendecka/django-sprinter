@@ -1,0 +1,7 @@
+Django==1.4.3
+psycopg2==2.4.6
+dj_database_url==0.2.1
+gunicorn==0.17.2
+django-compressor==1.2
+django-discover-runner==0.2.2
+expecter==0.2.2

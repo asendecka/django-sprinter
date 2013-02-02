@@ -1,0 +1,24 @@
+{% load compress staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% block css %}
+    {% compress css %}
+    {% endcompress %}
+    {% endblock %}
+</head>
+
+<body>
+    <div class='container'>
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% block js %}
+    {% compress js %}
+    {% endcompress %}
+    {% endblock %}
+</body>
+</html>
