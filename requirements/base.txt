@@ -5,3 +5,4 @@ gunicorn==0.17.2
 django-compressor==1.2
 django-discover-runner==0.2.2
 expecter==0.2.2
+South==0.7.6

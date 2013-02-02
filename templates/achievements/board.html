@@ -1,0 +1,11 @@
+<h1>Changes</h1>
+<ul>
+    {% for login in changes.values %}
+    {% for change in login %}
+        <li><strong>{{ change.ticket }}</strong> ({{ change.author }}, 
+        {{ change.time }})
+        <span>{{ change.old }}</span> <span>{{ change.new }}</span> 
+        {{ change.field }}</li>
+        {% endfor %}
+    {% endfor %}
+</ul>

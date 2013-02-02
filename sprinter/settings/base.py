@@ -103,6 +103,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'compressor',
+    'south',
+
+	'sprinter.achievements',
 )
 
 TEST_RUNNER = 'discover_runner.DiscoverRunner'
@@ -135,3 +138,5 @@ LOGGING = {
         },
     }
 }
+
+AUTH_PROFILE_MODULE = 'achievements.Sprinter'
