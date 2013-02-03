@@ -36,24 +36,28 @@ def grant_achievements(sprinter, tickets):
 
 def generate_stats(tickets):
     stats = {
-        'ticket_count': [], 
-        'attachment_count': [], 
+        'ticket_count': set([]), 
+        'attachment_count': set([]), 
         'comment_count': [], 
         'severity': {}, 
         'resolution': {}, 
         'type': {}, 
         'component': {},
     }
-
+    
     for ticket in tickets:
         attributes = ticket['ticket'][TICKET_ATTRIBUTES]
        
         # tickets changed
-        stats['ticket_count'].append(ticket['ticket_id'])
+        stats['ticket_count'].add(ticket['ticket_id'])
 
         # attachmnets added
         if attributes['has_patch'] and ticket['field'] == FD_ATTACHMENT: 
-            stats['attachment_count'].append(ticket['ticket_id'])
+            stats['attachment_count'].add(ticket['ticket_id'])
+        
+        # comment count
+        if ticket['field'] == FD_COMMENT: 
+            stats['comment_count'].append(ticket['ticket_id'])
 
         # changes in tickets with given severity/component/resolution/type
         for stat_field in STAT_FIELDS:
