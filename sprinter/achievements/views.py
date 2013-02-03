@@ -3,11 +3,13 @@ import os
 
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Count
 
 from sprinter.achievements.models import Sprinter
 from sprinter.achievements.proxies import TicketChangesImporter
 
-def board(request):
+# TODO: remove this view
+def test_trac(request):
     start_date = datetime(2013, 2, 1, 10, 0, 0, 0)
     logins = [sprinter.trac_login for sprinter in Sprinter.objects.all()]
     user = os.environ['TRAC_USER']
@@ -16,8 +18,16 @@ def board(request):
             start_date=start_date)
     changes = proxy.fetch()
 
-    return render(request, 'achievements/board.html', {
+    return render(request, 'achievements/test_trac.html', {
         'changes': changes
+    })
+
+def board(request):
+    sprinters = Sprinter.objects.all().annotate(achievements_count=\
+            Count('achievements')).order_by('-achievements_count')
+    print sprinters
+    return render(request, 'achievements/board.html', {
+        'sprinters': sprinters
     })
 
 def sprinter_detail(request, pk):

@@ -1,14 +1,17 @@
-<h1>Changes</h1>
-<ul>
-    {% for login in changes.values %}
-    {% for change in login %}
-        <li><strong>{{ change.ticket_id }}</strong> ({{ change.author }}, 
-        {{ change.time }})
-        <span>{{ change.old }}</span> <span>{{ change.new }}</span> 
-        {{ change.field }}
-        <br/>
-        <p>{{ change.ticket }}</p>
-        </li>
+<h1>Ranking</h1>
+<ol>
+    {% for sprinter in sprinters %}
+    <li class="sprinter">
+        <a href="{% url achievements.views.sprinter_detail pk=sprinter.pk %}">
+            {{ sprinter }} ({{ sprinter.achievements.count }} 
+            achievement{% if sprinter.achievements.count != 1 %}s{% endif %})
+        </a>
+        <ul>
+        {% for achievement in sprinter.achievements.all %}
+        <li><strong>{{ achievement }}</strong> &minus;
+        <span>{{ achievement.description }}</span></li>
         {% endfor %}
+        </ul>
+    </li>
     {% endfor %}
-</ul>
+</ol>
