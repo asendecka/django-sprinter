@@ -1,16 +1,10 @@
-=======================
-Django Project Template
-=======================
+===============
+Django Sprinter
+===============
 
-This is basic Django project template.
-
-Usage::
-
-    $ django-admin.py startproject superproject --template https://github.com/oinopion/django-project-template/archive/master.zip
-    $ cd superproject/
-    $ chmod +x manage.py
-    $ pip install -r requirements/dev.txt 
-
+Django Sprinter is a tool that brings more fun to Django Sprints. Each 
+registered sprint participant - if her Trac or GitHub login is provided - 
+will stand a chance to unlock some sprint achievements. 
 
 Project layout
 ==============
