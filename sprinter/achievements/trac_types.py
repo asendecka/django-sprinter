@@ -1,3 +1,16 @@
+# ticket fields
+FD_STATUS = 'status'
+FD_COMMENT = 'comment'
+FD_RESOLUTION = 'resolution'
+FD_ATTACHMENT = 'attachment'
+
+FIELDS = (
+    (FD_STATUS, 'Status'),
+    (FD_COMMENT, 'Comment'),
+    (FD_RESOLUTION, 'Resolution'),
+    (FD_ATTACHMENT, 'Attachement'),
+)
+
 # ticket statuses
 ST_ASSIGN = 0
 ST_CLOSED = 1
@@ -26,7 +39,7 @@ TYPES = (
 SV_NORMAL = 0 
 SV_BLOCKER = 1
 
-SEVERITY = (
+SEVERITIES = (
     (SV_NORMAL,'Normal'), 
     (SV_BLOCKER, 'Release blocker'),
 )
@@ -39,10 +52,10 @@ RS_DUPLICATE = 3
 RS_WORKS = 4
 RS_NEEDSINFO = 5
 
-RESOLUTION = (
+RESOLUTIONS = (
     (RS_FIXED, 'fixed'), 
     (RS_INVALID, 'invalid'), 
-    (RS_WONTFIX, 'wontfix')
+    (RS_WONTFIX, 'wontfix'),
     (RS_DUPLICATE, 'duplicate'), 
     (RS_WORKS, 'worksforme'), 
     (RS_NEEDSINFO, 'needsinfo'),
@@ -89,7 +102,7 @@ CM_TESTING = 36
 CM_TRANSLATIONS = 37
 CM_UNCAT = 38
 
-COMPONENT = (
+COMPONENTS = (
     (CM_ADMIN, 'contrib.admin'), 
     (CM_ADMINDOCS, 'contrib.admindocs'), 
     (CM_AUTH, 'contrib.auth'), 

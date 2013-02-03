@@ -2,7 +2,7 @@ from datetime import datetime
 import os
 
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render, get_object_or_404
 
 from sprinter.achievements.models import Sprinter
 from sprinter.achievements.proxies import TicketChangesImporter
@@ -16,4 +16,13 @@ def board(request):
             start_date=start_date)
     changes = proxy.fetch()
 
-    return render_to_response('achievements/board.html', {'changes': changes})
+    return render(request, 'achievements/board.html', {
+        'changes': changes
+    })
+
+def sprinter_detail(request, pk):
+    sprinter = get_object_or_404(Sprinter, pk=pk)
+
+    return render(request, 'achievements/sprinter_detail.html', {
+        'sprinter': sprinter
+    })

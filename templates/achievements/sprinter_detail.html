@@ -1,0 +1,8 @@
+<h1>{{ sprinter }}</h1>
+{% for achievement in sprinter.achievements.all %}
+    <div class="achievement">
+        {{ achievement.name }}
+    </div>
+{% empty %}
+    <p>You have no achievements yet :(.</p>
+{% endfor %}

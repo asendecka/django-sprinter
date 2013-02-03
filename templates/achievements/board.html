@@ -2,10 +2,13 @@
 <ul>
     {% for login in changes.values %}
     {% for change in login %}
-        <li><strong>{{ change.ticket }}</strong> ({{ change.author }}, 
+        <li><strong>{{ change.ticket_id }}</strong> ({{ change.author }}, 
         {{ change.time }})
         <span>{{ change.old }}</span> <span>{{ change.new }}</span> 
-        {{ change.field }}</li>
+        {{ change.field }}
+        <br/>
+        <p>{{ change.ticket }}</p>
+        </li>
         {% endfor %}
     {% endfor %}
 </ul>

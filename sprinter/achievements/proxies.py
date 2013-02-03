@@ -16,6 +16,8 @@ class TracClient(object):
     def get_ticket_changelog(self, ticket):
         return self.proxy.ticket.changeLog(ticket)
 
+    def get_ticket(self, ticket):
+        return self.proxy.ticket.get(ticket)
 
 class TicketChangesImporter(object):
     
@@ -30,12 +32,13 @@ class TicketChangesImporter(object):
             changes[login] = []
         return changes
 
-    def process_ticket_changelog(self, ticket, change_log, changes):
+    def process_ticket_changelog(self, ticket_id, change_log, changes, ticket):
         updated_changes = copy(changes)
         (change_time, author, field, old, new, permanent) = change_log.pop()
         while change_time > self.start_date and change_log: 
             if author in self.logins:
                 updated_changes[author].append({
+                    'ticket_id': ticket_id,
                     'ticket': ticket,
                     'time': change_time, 
                     'author': author, 
@@ -50,9 +53,11 @@ class TicketChangesImporter(object):
         recent_changes = self.trac_client.get_recent_changes(self.start_date) 
         changes = self.init_changes(self.logins) 
 
-        for ticket in recent_changes:
-            change_log = self.trac_client.get_ticket_changelog(ticket)
+        for ticket_id in recent_changes:
+            change_log = self.trac_client.get_ticket_changelog(ticket_id)
+            ticket = self.trac_client.get_ticket(ticket_id)
             if change_log:
-                changes = self.process_ticket_changelog(ticket, change_log, changes)
+                changes = self.process_ticket_changelog(ticket_id, change_log,\
+                        changes, ticket)
 
         return changes
