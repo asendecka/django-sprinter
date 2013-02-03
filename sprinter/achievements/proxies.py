@@ -22,7 +22,7 @@ class TracClient(object):
 class TicketChangesImporter(object):
     
     def __init__(self, user, password, logins, start_date, trac_client=None):
-        self.trac_client = trac_client if trac_client else TracClient(user, password)
+        self.trac_client = trac_client or TracClient(user, password)
         self.logins = logins
         self.start_date = start_date
 
@@ -34,8 +34,10 @@ class TicketChangesImporter(object):
 
     def process_ticket_changelog(self, ticket_id, change_log, changes, ticket):
         updated_changes = copy(changes)
-        (change_time, author, field, old, new, permanent) = change_log.pop()
-        while change_time > self.start_date and change_log: 
+        for change_time, author, field, old, new, permanent in reversed(change_log):
+            if change_time < self.start_date:
+                break
+
             if author in self.logins:
                 updated_changes[author].append({
                     'ticket_id': ticket_id,
@@ -46,7 +48,6 @@ class TicketChangesImporter(object):
                     'new': new,
                     'field': field,
                 })
-            (change_time, author, field, old, new, permanent) = change_log.pop()
         return updated_changes
 
     def fetch(self):
