@@ -1,0 +1,8 @@
+<h1>Changes github</h1>
+<ul>
+    {% for login in changes.values %}
+    {% for change in login %}
+        {{ change }}
+    {% endfor %}
+    {% endfor %}
+</ul>

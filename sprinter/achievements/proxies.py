@@ -1,5 +1,67 @@
 from xmlrpclib import ServerProxy
 from copy import copy
+from pyhole import PyHole
+from datetime import datetime
+from dateutil import parser, tz
+
+from django.utils.simplejson import loads
+
+def init_changes(logins):
+    changes = {}
+    for login in logins:
+        changes[login] = []
+    return changes
+
+class GithubClient(object):
+    GITHUB_URL = 'https://api.github.com/repos/django/django'
+
+    def __init__(self):
+        self.proxy = PyHole(self.GITHUB_URL)
+
+    def get_pull_requests_page(self, page_no=None):
+        return self.proxy(page=page_no).pulls.get()
+
+    def get_recent_pull_requests(self, start_date, page_no=None):
+        pull_requests = []
+        page = loads(self.get_pull_requests_page(page_no=page_no))
+        stop = False
+        for element in page:
+            print "element login", element['user']['login']
+            from django.utils import timezone
+            current_date = timezone.make_aware(parser.parse(element['created_at']),\
+                    timezone.get_default_timezone())
+            start_date = timezone.make_aware(start_date, timezone.get_default_timezone())
+            if current_date.astimezone(tz.tzutc()) < start_date:
+                stop = True
+                break
+            pull_requests.append(element)
+
+        if not stop:
+            page_no = page_no + 1 if page_no else 2
+            pull_requests = pull_requests +\
+                    self.get_recent_pull_requests(page_no=page_no)
+        return pull_requests
+
+class GithubImporter(object):
+    
+    def __init__(self, logins, start_date, github_client=None):
+        self.github_client = github_client or GithubClient()
+        self.logins = logins
+        self.start_date = start_date
+    
+    def fetch(self):
+        pull_requests = self.github_client.get_recent_pull_requests(\
+                self.start_date) 
+        print "AAAAAAAA"
+        changes = init_changes(self.logins) 
+
+        for pull_request in pull_requests:
+            if pull_request['user']['login'] in self.logins:
+                changes[pull_request['user']['login']].append(\
+                        pull_request['number'])
+
+        return changes
+
 
 class TracClient(object):
     TRAC_URL = 'code.djangoproject.com/login/rpc'
@@ -26,12 +88,6 @@ class TicketChangesImporter(object):
         self.logins = logins
         self.start_date = start_date
 
-    def init_changes(self, logins):
-        changes = {}
-        for login in logins:
-            changes[login] = []
-        return changes
-
     def process_ticket_changelog(self, ticket_id, change_log, changes, ticket):
         updated_changes = copy(changes)
         for change_time, author, field, old, new, permanent in reversed(change_log):
@@ -52,7 +108,7 @@ class TicketChangesImporter(object):
 
     def fetch(self):
         recent_changes = self.trac_client.get_recent_changes(self.start_date) 
-        changes = self.init_changes(self.logins) 
+        changes = init_changes(self.logins) 
 
         for ticket_id in recent_changes:
             change_log = self.trac_client.get_ticket_changelog(ticket_id)

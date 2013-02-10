@@ -26,6 +26,7 @@ class Achievement(models.Model):
     component = models.IntegerField(choices=COMPONENTS, null=True,\
             blank=True)
 
+    pull_request_count = models.IntegerField(null=True, blank=True)
 
     def can_grant_achievement(self, stats):
         """Simple achievement logic. Should be extended to something 
@@ -74,6 +75,10 @@ class Achievement(models.Model):
             valid_tickets = self.get_valid_tickets(stats['component'],\
                     self.component, valid_tickets, ticket_count)
             if not valid_tickets:
+                return False
+        
+        if self.pull_request_count and 'pull_requests' in stats and stats['pull_requests']:
+            if len(stats['pull_requests']) < self.pull_request_count:
                 return False
 
         return True

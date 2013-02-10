@@ -23,7 +23,7 @@ def get_attr_id(stat_field, attr_val):
         return None
     return ATTRIBUTE_DICTS[stat_field][attr_val]
 
-def process_changes(changes):
+def process_changes(changes, github_changes):
     """Takes all changes done by sprinters and recalculate sprinters'
     statistics"""
     
@@ -34,7 +34,9 @@ def process_changes(changes):
             sprinter = Sprinter.objects.filter(trac_login=author)
         if sprinter:
             sprinter = sprinter[0]
-            grant_achievements(sprinter, tickets)
+            pull_requests = github_changes[sprinter.github_login] if\
+                    sprinter.github_login in github_changes else None
+            grant_achievements(sprinter, tickets, pull_requests)
 
 def get_updated_stat(stats, stat_field, ticket, attributes):
     if attributes[stat_field] in stats[stat_field]:
@@ -42,14 +44,14 @@ def get_updated_stat(stats, stat_field, ticket, attributes):
     else:
         return [ticket['ticket_id']]
 
-def grant_achievements(sprinter, tickets):
+def grant_achievements(sprinter, tickets, pull_requests):
     achievements = Achievement.objects.all()
-    stats = generate_stats(tickets)
+    stats = generate_stats(tickets, pull_requests)
     for achievement in achievements:
         if achievement.can_grant_achievement(stats):
             sprinter.achievements.add(achievement)
 
-def generate_stats(tickets):
+def generate_stats(tickets, pull_requests):
     stats = {
         'ticket_count': set([]), 
         'attachment_count': set([]), 
@@ -80,6 +82,9 @@ def generate_stats(tickets):
                 attr_id = get_attr_id(stat_field, attributes[stat_field])
                 stats[stat_field][attr_id] =\
                         get_updated_stat(stats, stat_field, ticket, attributes)
+    
+    # calculate pull requests
+    stats['pull_requests'] = pull_requests
 
     return stats
 

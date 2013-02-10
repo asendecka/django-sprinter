@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Count
 
 from sprinter.achievements.models import Sprinter
-from sprinter.achievements.proxies import TicketChangesImporter
+from sprinter.achievements.proxies import TicketChangesImporter, GithubImporter
 
 # TODO: remove this view
 def test_trac(request):
@@ -22,10 +22,22 @@ def test_trac(request):
         'changes': changes
     })
 
+# TODO: remove this view
+def test_github(request):
+    start_date = datetime(2013, 2, 1, 10, 0, 0, 0)
+    logins = [sprinter.github_login for sprinter in Sprinter.objects.all() if \
+            sprinter.github_login]
+    proxy = GithubImporter(logins=logins, start_date=start_date)
+    changes = proxy.fetch()
+
+    return render(request, 'achievements/test_github.html', {
+        'changes': changes
+    })
+
+
 def board(request):
     sprinters = Sprinter.objects.all().annotate(achievements_count=\
             Count('achievements')).order_by('-achievements_count')
-    print sprinters
     return render(request, 'achievements/board.html', {
         'sprinters': sprinters
     })
