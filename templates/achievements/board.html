@@ -1,17 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+&minus; Ranking
+{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="span12">
+<ul class="nav nav-pills menu">
+    <li class="active"><a href="#">Ranking</a></li>
+    <li><a href="#">Achievements</a></li>
+    <li><a href="{% url sprinter.achievements.views.sprinter_detail pk=1 %}">My score</a></li>
+</ul>
 <h1>Ranking</h1>
-<ol>
+<table class="table table-striped">
     {% for sprinter in sprinters %}
-    <li class="sprinter">
-        <a href="{% url achievements.views.sprinter_detail pk=sprinter.pk %}">
-            {{ sprinter }} ({{ sprinter.achievements.count }} 
-            achievement{% if sprinter.achievements.count != 1 %}s{% endif %})
-        </a>
-        <ul>
+    <tr class="sprinter">
+        <td class="rank">{{ forloop.counter }}.</td>
+        <td>
+        {% if sprinter.get_email_hash %}
+            <img class="img-rounded" src="http://www.gravatar.com/avatar/{{ sprinter.get_email_hash }}?s=64"/></a>
+        {% endif %}
+        </td>
+        <td>
+            <a href="{% url achievements.views.sprinter_detail pk=sprinter.pk %}">{{ sprinter }}</a>
+        </td>
+        <td class="score">
+            {{ sprinter.achievements.count }}
+        </td>
+        <td class="achievement-list">
         {% for achievement in sprinter.achievements.all %}
-        <li><strong>{{ achievement }}</strong> &minus;
-        <span>{{ achievement.description }}</span></li>
+        <a href="{% url sprinter.achievements.views.achievement_detail pk=achievement.pk %}">{% if achievement.picture %}<img src="{{ achievement.picture.url }}" title="{{ achievement }}" class="img-rounded size_64"/>{% endif %}</a>
         {% endfor %}
-        </ul>
-    </li>
+        </td>
+    </tr>
     {% endfor %}
-</ol>
+</table>
+</div>
+</div>
+{% endblock %}

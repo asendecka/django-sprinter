@@ -4,4 +4,5 @@
 
 # django collected static files
 public/
+media/
 

@@ -1,3 +1,5 @@
+import md5
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -14,6 +16,7 @@ class Achievement(models.Model):
 
     name = models.CharField('Achievement title', max_length=255)
     description = models.CharField('Description', max_length=2000)
+    picture = models.ImageField(upload_to='achievements', null=True)
 
     ticket_count = models.IntegerField(null=True, blank=True)
     attachment_count = models.IntegerField(null=True, blank=True)
@@ -26,7 +29,7 @@ class Achievement(models.Model):
     component = models.IntegerField(choices=COMPONENTS, null=True,\
             blank=True)
 
-    pull_request_count = models.IntegerField(null=True, blank=True)
+    ticket_count = models.IntegerField(null=True, blank=True)
 
     def can_grant_achievement(self, stats):
         """Simple achievement logic. Should be extended to something 
@@ -106,6 +109,9 @@ class Sprinter(models.Model):
     github_login = models.CharField('Github login', max_length=255,\
             null=True, blank=True)
     achievements = models.ManyToManyField(Achievement)
+
+    def get_email_hash(self):
+        return md5.new(self.user.email).hexdigest()
 
     def __unicode__(self):
         return unicode(self.user)

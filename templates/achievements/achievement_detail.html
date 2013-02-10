@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+&minus; Achievement: {{ achievement }}
+{% endblock %}
+
+{% block content %}
+    <ul class="nav nav-pills menu">
+        <li><a href="{% url sprinter.achievements.views.board %}">Ranking</a></li>
+        <li class="active"><a href="#">Achievements</a></li>
+        <li><a href="{% url sprinter.achievements.views.sprinter_detail pk=1 %}">My score</a></li>
+    </ul>
+    <h1>{{ achievement }}</h1>
+    <div class="row">
+    <div class="span2">
+        {% if achievement.picture %}<img src="{{ achievement.picture.url }}" title="{{ achievement }}" class="img-rounded size_128"/>{% endif %}
+    </div>
+    <div class="span8">
+    <blockquote class="achievement-info">
+        <p class="lead">{{ achievement.description }} lore ipsum, lorem ipsum sdfhuas sidufiasd sdhuch dsavadsiv nsdvhad.</p>
+    </blockquote>
+    </div>
+    </div>
+{% endblock %}

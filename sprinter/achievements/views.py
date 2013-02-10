@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count
 
-from sprinter.achievements.models import Sprinter
+from sprinter.achievements.models import Sprinter, Achievement
 from sprinter.achievements.proxies import TicketChangesImporter, GithubImporter
 
 # TODO: remove this view
@@ -48,3 +48,11 @@ def sprinter_detail(request, pk):
     return render(request, 'achievements/sprinter_detail.html', {
         'sprinter': sprinter
     })
+
+def achievement_detail(request, pk):
+    achievement = get_object_or_404(Achievement, pk=pk)
+    
+    return render(request, 'achievements/achievement_detail.html', {
+        'achievement': achievement
+    })
+

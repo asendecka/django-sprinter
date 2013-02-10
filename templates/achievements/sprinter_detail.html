@@ -1,8 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+&minus; {{ sprinter }}
+{% endblock %}
+
+{% block content %}
+<ul class="nav nav-pills menu">
+    <li><a href="{% url sprinter.achievements.views.board %}">Ranking</a></li>
+    <li><a href="#">Achievements</a></li>
+    <li class="active"><a href="{% url sprinter.achievements.views.sprinter_detail pk=1 %}">My score</a></li>
+</ul>
+<div class="row">
+<div class="span2 avatar">
+{% if sprinter.get_email_hash %}
+    <img class="img-rounded" src="http://www.gravatar.com/avatar/{{ sprinter.get_email_hash }}?s=128"/></a>
+{% endif %}
+</div>
+<div class="span8">
 <h1>{{ sprinter }}</h1>
+</div>
+</div>
+<table class="table table-striped">
 {% for achievement in sprinter.achievements.all %}
-    <div class="achievement">
-        {{ achievement.name }}
-    </div>
+<tr class="achievement">
+        <td class="achievement-name">{{ achievement.name }}</td>
+        <td>
+            <a href="{% url sprinter.achievements.views.achievement_detail pk=achievement.pk %}">{% if achievement.picture %}<img src="{{ achievement.picture.url }}" title="{{ achievement }}" class="img-rounded size_64"/>{% endif %}</a>
+        </td>
+        <td>{{ achievement.description }}</td>
+    </tr>
 {% empty %}
     <p>You have no achievements yet :(.</p>
 {% endfor %}
+</table>
+{% endblock %}
