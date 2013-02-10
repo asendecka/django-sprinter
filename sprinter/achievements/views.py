@@ -10,7 +10,7 @@ from sprinter.achievements.proxies import TicketChangesImporter
 
 # TODO: remove this view
 def test_trac(request):
-    start_date = datetime(2013, 2, 1, 10, 0, 0, 0)
+    start_date = datetime(2013, 2, 9, 10, 0, 0, 0)
     logins = [sprinter.trac_login for sprinter in Sprinter.objects.all()]
     user = os.environ['TRAC_USER']
     password = os.environ['TRAC_PASSWORD']

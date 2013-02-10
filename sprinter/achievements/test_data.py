@@ -12,9 +12,10 @@ RECENT_TICKETS = {
             [datetime(2013, 2, 3, 14, 0, 0, 0), 'testuser', 'comment', '', '', 1], 
             [datetime(2013, 2, 3, 15, 0, 0, 0), 'testuser', 'attachment', '', '', 1], 
             [datetime(2013, 2, 3, 16, 0, 0, 0), 'testuser', 'comment', '', '', 1], 
+            [datetime(2013, 2, 3, 17, 0, 0, 0), 'testuser', 'resolution', '', '', 1], 
         ],
-        'ticket': [1, '', '', {'has_patch': 1, 'type': 'Bug', 'component': '',\
-                'resolution': '', 'severity': ''}],
+        'ticket': [1, '', '', {'has_patch': 1, 'type': 'Bug', 'component': 'Core (URLs)',\
+                'resolution': 'worksforme', 'severity': 'Normal'}],
     },
     2: {
         'change': [
@@ -22,7 +23,7 @@ RECENT_TICKETS = {
             [datetime(2011, 2, 2, 10, 0, 0, 0), 'testuser', 'comment', '', '', 1], 
             [datetime(2013, 2, 2, 10, 0, 0, 0), 'testuser', 'comment', '', '', 1], 
         ],
-        'ticket': [2, '', '', {'has_patch': 0, 'type': 'Bug', 'component': '',\
-                'resolution': '', 'severity': ''}],
+        'ticket': [2, '', '', {'has_patch': 0, 'type': 'New feature', 'component': 'GIS',\
+                'resolution': 'wontfix', 'severity': 'Release blocker'}],
     }        
 }

@@ -8,6 +8,7 @@ from sprinter.achievements.proxies import TicketChangesImporter
 from sprinter.achievements.processor import process_changes
 
 from sprinter.achievements.test_data import RECENT_CHANGES, RECENT_TICKETS
+from sprinter.achievements.trac_types import *
 
 class TracClient(object):
 
@@ -72,4 +73,34 @@ class AchievementsTestCase(TestCase):
                 description='Some description.', comment_count=3)
 
         self._check_achievements(expects_count=1)
-       
+  
+    # Note: achievements with ticket type, resolution, severity, component 
+    # check if the user did anything with ticket which is now with a given 
+    # property. So we can check if the user did anything (i.e. comment) on 
+    # a Bug ticket, but we do not check if the user changed tikcet type from
+    # something else to Bug. 
+    def test_ticket_type(self):
+        achievement = Achievement.objects.create(name='Bug achievement',\
+                description='Some description.', ticket_type=TP_BUG)
+        
+        other_achievement = Achievement.objects.create(name='New feature achievement',\
+                description='Some description.', ticket_type=TP_FEATURE)
+        self._check_achievements(expects_count=2)
+
+    def test_severity(self):
+        achievement = Achievement.objects.create(name='Realease blocker',\
+                description='Some description.', severity=SV_BLOCKER)
+
+        self._check_achievements(expects_count=1)
+
+    def test_resolution(self):
+        achievement = Achievement.objects.create(name='Wontfix',\
+                description='Some description.', resolution=RS_WONTFIX)
+
+        self._check_achievements(expects_count=1)
+
+    def test_component(self):
+        achievement = Achievement.objects.create(name='Urls change',\
+                description='Some description.', component=CM_URLS)
+
+        self._check_achievements(expects_count=1)

@@ -14,7 +14,9 @@ class Achievement(models.Model):
     ticket_count = models.IntegerField(null=True, blank=True)
     attachment_count = models.IntegerField(null=True, blank=True)
     comment_count = models.IntegerField(null=True, blank=True)
-    severity = models.IntegerField(choices=SEVERITIES,null=True, blank=True)
+
+    # current status of the ticket (no matter if user changed it to the given state or not)
+    severity = models.IntegerField(choices=SEVERITIES, null=True, blank=True)
     resolution = models.IntegerField(choices=RESOLUTIONS, null=True, blank=True)
     ticket_type = models.IntegerField(choices=TYPES, null=True, blank=True)
     component = models.IntegerField(choices=COMPONENTS, null=True,\
@@ -23,24 +25,23 @@ class Achievement(models.Model):
     def can_grant_achievement(self, stats):
         """Simple achievement logic. Should be extended to something 
         more complicated with checking ticket ids in some stats."""
-
         if self.ticket_count and len(stats['ticket_count']) < self.ticket_count:
             return False
+        ticket_count = self.ticket_count if self.ticket_count else 1
         if self.attachment_count and\
                 len(stats['attachment_count']) < self.attachment_count:
             return False
         if self.comment_count and\
                 len(stats['comment_count']) < self.comment_count:
             return False
-        if self.severity and len(stats['severity']) < self.severity:
+        if self.severity and (self.severity not in stats['severity'] or len(stats['severity'][self.severity]) < ticket_count):
             return False
-        if self.resolution and len(stats['resolution']) < self.resolution:
+        if self.resolution and (self.resolution not in stats['resolution'] or len(stats['resolution'][self.resolution]) < ticket_count):
             return False
-        if self.ticket_type and len(stats['type']) < self.ticket_type:
+        if self.ticket_type and (self.ticket_type not in stats['type'] or len(stats['type'][self.ticket_type]) < ticket_count):
             return False
-        if self.component and len(stats['component']) < self.component:
+        if self.component and (self.component not in stats['component'] or len(stats['component'][self.component]) < ticket_count):
             return False
-
         return True
 
     def __unicode__(self):

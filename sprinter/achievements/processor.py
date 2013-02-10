@@ -7,6 +7,21 @@ TICKET_ATTRIBUTES = 3
 # list of attribute names
 STAT_FIELDS = ['type', 'component', 'resolution', 'severity', ]
 
+def create_attribute_dict(pairs):
+    return dict([(name, val) for val, name in pairs])
+
+ATTRIBUTE_DICTS = {
+    'type': create_attribute_dict(TYPES),
+    'component': create_attribute_dict(COMPONENTS),
+    'resolution': create_attribute_dict(RESOLUTIONS),
+    'severity': create_attribute_dict(SEVERITIES),
+}
+
+def get_attr_id(stat_field, attr_val):
+    if stat_field not in ATTRIBUTE_DICTS or \
+            attr_val not in ATTRIBUTE_DICTS[stat_field]:
+        return None
+    return ATTRIBUTE_DICTS[stat_field][attr_val]
 
 def process_changes(changes):
     """Takes all changes done by sprinters and recalculate sprinters'
@@ -61,6 +76,10 @@ def generate_stats(tickets):
 
         # changes in tickets with given severity/component/resolution/type
         for stat_field in STAT_FIELDS:
-            stats[stat_field][attributes[stat_field]] =\
-                    get_updated_stat(stats, stat_field, ticket, attributes)
+            if stat_field in attributes:
+                attr_id = get_attr_id(stat_field, attributes[stat_field])
+                stats[stat_field][attr_id] =\
+                        get_updated_stat(stats, stat_field, ticket, attributes)
+
     return stats
+
