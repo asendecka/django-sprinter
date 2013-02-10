@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 
 from sprinter.achievements.trac_types import *
 
+def narrow_results(current, valid):
+    """Narrow results from stats to ticket ids previously taken into account."""
+    return [f for f in current if f in valid]
+
 class Achievement(models.Model):
     """Achievement with fields that specify the set of rules to gain it. 
     For now all rule fields works with AND (user has to satisfy all non-null 
@@ -22,27 +26,66 @@ class Achievement(models.Model):
     component = models.IntegerField(choices=COMPONENTS, null=True,\
             blank=True)
 
+
     def can_grant_achievement(self, stats):
         """Simple achievement logic. Should be extended to something 
         more complicated with checking ticket ids in some stats."""
-        if self.ticket_count and len(stats['ticket_count']) < self.ticket_count:
-            return False
+        valid_tickets = None
+        if self.ticket_count:
+            valid_tickets = stats['ticket_count'] 
+            if len(stats['ticket_count']) < self.ticket_count:
+                return False
+
         ticket_count = self.ticket_count if self.ticket_count else 1
-        if self.attachment_count and\
-                len(stats['attachment_count']) < self.attachment_count:
-            return False
-        if self.comment_count and\
-                len(stats['comment_count']) < self.comment_count:
-            return False
-        if self.severity and (self.severity not in stats['severity'] or len(stats['severity'][self.severity]) < ticket_count):
-            return False
-        if self.resolution and (self.resolution not in stats['resolution'] or len(stats['resolution'][self.resolution]) < ticket_count):
-            return False
-        if self.ticket_type and (self.ticket_type not in stats['type'] or len(stats['type'][self.ticket_type]) < ticket_count):
-            return False
-        if self.component and (self.component not in stats['component'] or len(stats['component'][self.component]) < ticket_count):
-            return False
+
+        if self.attachment_count:
+            valid_tickets = narrow_results(stats['attachment_count'],\
+                    valid_tickets) if valid_tickets else\
+                    stats['attachment_count']
+            if len(valid_tickets) < self.attachment_count:
+                return False
+
+        if self.comment_count:
+            valid_tickets = narrow_results(stats['comment_count'],\
+                    valid_tickets) if valid_tickets else\
+                    stats['comment_count']
+            if len(valid_tickets) < self.comment_count:
+                return False
+
+        if self.severity:
+            valid_tickets = self.get_valid_tickets(stats['severity'],\
+                    self.severity, valid_tickets, ticket_count)
+            if not valid_tickets:
+                return False
+
+        if self.resolution:
+            valid_tickets = self.get_valid_tickets(stats['resolution'],\
+                    self.resolution, valid_tickets, ticket_count)
+            if not valid_tickets:
+                return False
+
+        if self.ticket_type:
+            valid_tickets = self.get_valid_tickets(stats['type'],\
+                    self.ticket_type, valid_tickets, ticket_count)
+            if not valid_tickets:
+                return False
+
+        if self.component:
+            valid_tickets = self.get_valid_tickets(stats['component'],\
+                    self.component, valid_tickets, ticket_count)
+            if not valid_tickets:
+                return False
+
         return True
+
+    def get_valid_tickets(self, stats_list, attr_name, valid_tickets, ticket_count):
+        valid_tickets = narrow_results(stats_list[attr_name],\
+                valid_tickets) if valid_tickets else\
+                stats_list[attr_name]
+        if attr_name not in stats_list or\
+                len(valid_tickets) < ticket_count:
+            return []
+        return valid_tickets
 
     def __unicode__(self):
         return self.name

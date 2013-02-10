@@ -104,3 +104,20 @@ class AchievementsTestCase(TestCase):
                 description='Some description.', component=CM_URLS)
 
         self._check_achievements(expects_count=1)
+
+    def test_complex_achievements(self):
+        achievement = Achievement.objects.create(name='Complex achievement 1',\
+                description='Some description.', comment_count=3,\
+                ticket_count=1, severity=SV_NORMAL, ticket_type=TP_BUG,\
+                resolution=RS_WORKS)
+
+        other_achievement = Achievement.objects.create(name='Complex 2',\
+                description='Some description.', comment_count=1,\
+                attachment_count=1, severity=SV_BLOCKER)
+        
+        another_achievement = Achievement.objects.create(name='Complex 3',\
+                description='Some description.', comment_count=2,\
+                attachment_count=1, severity=SV_NORMAL, resolution=RS_WORKS,\
+                component=CM_URLS, ticket_type=TP_BUG)
+
+        self._check_achievements(expects_count=2)
