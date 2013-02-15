@@ -52,7 +52,7 @@ class GithubImporter(object):
     def fetch(self):
         pull_requests = self.github_client.get_recent_pull_requests(\
                 self.start_date) 
-        print "AAAAAAAA"
+
         changes = init_changes(self.logins) 
 
         for pull_request in pull_requests:
