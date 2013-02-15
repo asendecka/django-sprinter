@@ -29,7 +29,7 @@ class Achievement(models.Model):
     component = models.IntegerField(choices=COMPONENTS, null=True,\
             blank=True)
 
-    ticket_count = models.IntegerField(null=True, blank=True)
+    pull_request_count = models.IntegerField(null=True, blank=True)
 
     def can_grant_achievement(self, stats):
         """Simple achievement logic. Should be extended to something 
