@@ -107,6 +107,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'compressor',
     'south',
+    'social_auth',
 
 	'sprinter.achievements',
 )
@@ -143,3 +144,21 @@ LOGGING = {
 }
 
 AUTH_PROFILE_MODULE = 'achievements.Sprinter'
+
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.twitter.TwitterBackend',
+    'social_auth.backends.contrib.github.GithubBackend',
+    'social_auth.backends.google.GoogleBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_URL          = '/profile/signin/'
+LOGIN_REDIRECT_URL = '/profile/edit/'
+LOGIN_ERROR_URL    = '/profile/error/'
+TWITTER_CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY', None)
+TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET', None)
+GITHUB_APP_ID = os.environ.get('GITHUB_APP_ID', None)
+GITHUB_API_SECRET = os.environ.get('GITHUB_API_SECRET', None)
+
+SOCIAL_AUTH_COMPLETE_URL_NAME  = 'socialauth_complete'
+SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'

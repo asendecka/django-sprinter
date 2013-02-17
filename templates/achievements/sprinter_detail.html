@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load url from future %}
 
 {% block title %}
 &minus; {{ sprinter }}
@@ -6,9 +7,10 @@
 
 {% block content %}
 <ul class="nav nav-pills menu">
-    <li><a href="{% url sprinter.achievements.views.board %}">Ranking</a></li>
+    <li><a href="{% url 'sprinter.achievements.views.board' %}">Ranking</a></li>
     <li><a href="#">Achievements</a></li>
-    <li class="active"><a href="{% url sprinter.achievements.views.sprinter_detail pk=1 %}">My score</a></li>
+    <li class="active"><a href="{% url 'sprinter.achievements.views.sprinter_detail' pk=1 %}">My score</a></li>
+    <li><a class="btn" href="{% url 'edit_profile' %}">Edit profile</a></li>
 </ul>
 <div class="row">
 <div class="span2 avatar">
@@ -25,12 +27,12 @@
 <tr class="achievement">
         <td class="achievement-name">{{ achievement.name }}</td>
         <td>
-            <a href="{% url sprinter.achievements.views.achievement_detail pk=achievement.pk %}">{% if achievement.picture %}<img src="{{ achievement.picture.url }}" title="{{ achievement }}" class="img-rounded size_64"/>{% endif %}</a>
+            <a href="{% url 'sprinter.achievements.views.achievement_detail' pk=achievement.pk %}">{% if achievement.picture %}<img src="{{ achievement.picture.url }}" title="{{ achievement }}" class="img-rounded size_64"/>{% endif %}</a>
         </td>
         <td>{{ achievement.description }}</td>
     </tr>
 {% empty %}
-    <p>You have no achievements yet :(.</p>
+    <p>No achievements yet :(.</p>
 {% endfor %}
 </table>
 {% endblock %}

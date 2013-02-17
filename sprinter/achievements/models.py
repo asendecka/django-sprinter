@@ -3,6 +3,8 @@ import md5
 from django.db import models
 from django.contrib.auth.models import User
 
+from social_auth.signals import socialauth_registered
+
 from sprinter.achievements.trac_types import *
 
 def narrow_results(current, valid):
@@ -16,7 +18,6 @@ class Achievement(models.Model):
 
     name = models.CharField('Achievement title', max_length=255)
     description = models.CharField('Description', max_length=2000)
-    picture = models.ImageField(upload_to='achievements', null=True)
 
     ticket_count = models.IntegerField(null=True, blank=True)
     attachment_count = models.IntegerField(null=True, blank=True)
@@ -110,9 +111,15 @@ class Sprinter(models.Model):
             null=True, blank=True)
     achievements = models.ManyToManyField(Achievement)
 
-    def get_email_hash(self):
-        return md5.new(self.user.email).hexdigest()
-
     def __unicode__(self):
         return unicode(self.user)
 
+    def get_email_hash(self):
+        return md5.new(self.user.email).hexdigest()
+
+def new_users_handler(sender, user, response, details, **kwargs):
+    # create Sprinter 
+    sprinter = Sprinter.objects.create(user=user)
+
+
+socialauth_registered.connect(new_users_handler, sender=None)

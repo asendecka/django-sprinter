@@ -4,6 +4,7 @@ import os
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count
+from django.contrib.auth.decorators import login_required
 
 from sprinter.achievements.models import Sprinter, Achievement
 from sprinter.achievements.proxies import TicketChangesImporter, GithubImporter
@@ -55,4 +56,13 @@ def achievement_detail(request, pk):
     return render(request, 'achievements/achievement_detail.html', {
         'achievement': achievement
     })
+
+@login_required
+def home(request):
+    sprinter = request.user.get_profile()
+
+    return render(request, 'achievements/sprinter_detail.html', {
+        'sprinter': sprinter
+    })
+
 

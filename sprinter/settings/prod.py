@@ -16,4 +16,8 @@ DATABASES = {
 
 # set SECRET_KEY env variable to something random
 SECRET_KEY = os.environ.get('SECRET_KEY', None)
+TWITTER_CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY', None)
+TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET', None)
+GOOGLE_CONSUMER_KEY = os.environ.get('GOOGLE_CONSUMER_KEY', None)
+GOOGLE_CONSUMER_SECRET  = os.environ.get('GOOGLE_CONSUMER_SECRET', None)
 
