@@ -115,7 +115,12 @@ class Sprinter(models.Model):
         return unicode(self.user)
 
     def get_email_hash(self):
-        return md5.new(self.user.email).hexdigest()
+        print self.user.email
+        if self.user.email:
+            return md5.new(self.user.email).hexdigest()
+        if self.trac_email:
+            return md5.new(self.trac_email).hexdigest()
+        return ''
 
 def new_users_handler(sender, user, response, details, **kwargs):
     # create Sprinter 
