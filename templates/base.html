@@ -1,4 +1,5 @@
 {% load compress staticfiles %}
+{% load url from future %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +16,19 @@
 
 <body>
     <div class='container'>
+        {% block navigation %}
+        <ul class="nav nav-pills menu">
+            <li {% if active == 'board' %}class="active"{% endif %}><a href="{% url 'board' %}">Ranking</a></li>
+            <li {% if active == 'achievements' %}class="active"{% endif %}><a href="#">Achievements</a></li>
+            {% if user.is_authenticated %}
+                <li {% if active == 'home' %}class="active"{% endif %}><a href="{% url 'home' %}">My score</a></li>
+                <li {% if active == 'edit' %}class="active"{% endif %}><a href="{% url 'edit_profile' %}">Edit profile</a></li>
+                <li><a class="btn" href="{% url 'signout' %}">Sign out</a></li>
+            {% else %}
+                <li><a class="btn" href="{% url 'signin' %}">Join</a></li>
+            {% endif %}
+        </ul>
+        {% endblock %}
         {% block content %}
         {% endblock %}
     </div>

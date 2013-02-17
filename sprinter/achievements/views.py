@@ -40,21 +40,24 @@ def board(request):
     sprinters = Sprinter.objects.all().annotate(achievements_count=\
             Count('achievements')).order_by('-achievements_count')
     return render(request, 'achievements/board.html', {
-        'sprinters': sprinters
+        'sprinters': sprinters,
+        'active': 'board',
     })
 
 def sprinter_detail(request, pk):
     sprinter = get_object_or_404(Sprinter, pk=pk)
 
     return render(request, 'achievements/sprinter_detail.html', {
-        'sprinter': sprinter
+        'sprinter': sprinter,
+        'active': 'sprinter',
     })
 
 def achievement_detail(request, pk):
     achievement = get_object_or_404(Achievement, pk=pk)
     
     return render(request, 'achievements/achievement_detail.html', {
-        'achievement': achievement
+        'achievement': achievement,
+        'active': 'achievements',
     })
 
 @login_required
@@ -62,7 +65,8 @@ def home(request):
     sprinter = request.user.get_profile()
 
     return render(request, 'achievements/sprinter_detail.html', {
-        'sprinter': sprinter
+        'sprinter': sprinter,
+        'active': 'home',
     })
 
 

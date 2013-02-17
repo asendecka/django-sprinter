@@ -18,6 +18,7 @@ class Achievement(models.Model):
 
     name = models.CharField('Achievement title', max_length=255)
     description = models.CharField('Description', max_length=2000)
+    picture = models.ImageField(upload_to='achievements', null=True)
 
     ticket_count = models.IntegerField(null=True, blank=True)
     attachment_count = models.IntegerField(null=True, blank=True)

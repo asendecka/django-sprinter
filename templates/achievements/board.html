@@ -8,17 +8,6 @@
 {% block content %}
 <div class="row">
 <div class="span12">
-<ul class="nav nav-pills menu">
-    <li class="active"><a href="#">Ranking</a></li>
-    <li><a href="#">Achievements</a></li>
-    <li><a href="{% url 'sprinter.achievements.views.sprinter_detail' pk=1 %}">My score</a></li>
-    <li>{% if user.is_authenticated %}
-            <a class="btn" href="{% url 'signout' %}">Sign out</a>
-        {% else %}
-            <a class="btn" href="{% url 'signin' %}">Join</a>
-        {% endif %}
-    </li>
-</ul>
 <h1>Ranking</h1>
 <table class="table table-striped">
     {% for sprinter in sprinters %}

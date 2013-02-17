@@ -5,11 +5,6 @@
 {% endblock %}
 
 {% block content %}
-    <ul class="nav nav-pills menu">
-        <li><a href="{% url sprinter.achievements.views.board %}">Ranking</a></li>
-        <li class="active"><a href="#">Achievements</a></li>
-        <li><a href="{% url sprinter.achievements.views.sprinter_detail pk=1 %}">My score</a></li>
-    </ul>
     <h1>{{ achievement }}</h1>
     <div class="row">
     <div class="span2">

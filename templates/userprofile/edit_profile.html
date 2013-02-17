@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Edit your account details</h1>
+    <h1>Edit your details</h1>
     <div class="row">
         <div class="span4">
             <p>Please fill details below: </p>
@@ -13,6 +13,12 @@
                 {{ form }}<br/>
                 <input type="submit" value="Save" class="btn btn-primary"/>
             </form>
+        </div>
+        <div class="span4">
+            <p>To unlock achievements you need to provide your Trac and Github logins.
+            Some achievements are available only for pull requests in Github and some only 
+            for Trac (probably there is more for the latter).
+            </p>
         </div>
     </div>
 {% endblock %}

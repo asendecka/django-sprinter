@@ -21,6 +21,7 @@ def edit_profile(request):
         form = SprinterForm(instance=sprinter)
     return render(request, 'userprofile/edit_profile.html', {
         'form': form,    
+        'active': 'edit',
     })
 
 def signout(request):
