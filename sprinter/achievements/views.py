@@ -3,7 +3,7 @@ import os
 
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.contrib.auth.decorators import login_required
 
 from sprinter.achievements.models import Sprinter, Achievement
@@ -70,9 +70,12 @@ def home(request):
     })
 
 def achievements(request):
-    achievements = Achievement.objects.all()
+    achievements = Achievement.objects.filter(Q(secret=False) | Q(sprinter__isnull=False)).distinct()
+    secret_achievements = Achievement.objects.filter(secret=True, sprinter__isnull=True)
+    print secret_achievements
 
     return render(request, 'achievements/achievements.html', {
         'achievements': achievements,
+        'secret_achievements': secret_achievements,
         'active': 'achievements',
     })
