@@ -97,6 +97,26 @@ class Achievement(models.Model):
             return []
         return valid_tickets
 
+    def get_severity(self):
+        if not self.severity:
+            return None
+        return dict(SEVERITIES)[self.severity]
+    
+    def get_component(self):
+        if not self.component:
+            return None
+        return dict(COMPONENTS)[self.component]
+    
+    def get_ticket_type(self):
+        if not self.ticket_type:
+            return None
+        return dict(TYPES)[self.ticket_type]
+    
+    def get_resolution(self):
+        if not self.resolution:
+            return None
+        return dict(RESOLUTIONS)[self.resolution]
+
     def __unicode__(self):
         return self.name
 

@@ -57,3 +57,7 @@ img.size_128 {
 .avatar {
     margin-top: 36px;
 }
+
+.achievement-icon {
+    min-width: 66px;
+}

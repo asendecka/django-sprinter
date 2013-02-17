@@ -69,4 +69,10 @@ def home(request):
         'active': 'home',
     })
 
+def achievements(request):
+    achievements = Achievement.objects.all()
 
+    return render(request, 'achievements/achievements.html', {
+        'achievements': achievements,
+        'active': 'achievements',
+    })

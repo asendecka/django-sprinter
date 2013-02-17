@@ -6,6 +6,12 @@
 
 {% block content %}
     <h1>Edit your details</h1>
+    {% if saved %}
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <strong>Yay!</strong> Your data successfully saved. It's time to code!
+    </div>
+    {% endif %}
     <div class="row">
         <div class="span4">
             <p>Please fill details below: </p>
