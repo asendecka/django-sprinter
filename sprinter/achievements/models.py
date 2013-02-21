@@ -1,4 +1,4 @@
-import md5
+from hashlib import md5
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -139,9 +139,9 @@ class Sprinter(models.Model):
     def get_email_hash(self):
         print self.user.email
         if self.user.email:
-            return md5.new(self.user.email).hexdigest()
+            return md5(self.user.email).hexdigest()
         if self.trac_email:
-            return md5.new(self.trac_email).hexdigest()
+            return md5(self.trac_email).hexdigest()
         return ''
 
 def new_users_handler(sender, user, response, details, **kwargs):

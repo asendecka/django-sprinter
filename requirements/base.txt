@@ -9,3 +9,4 @@ South==0.7.6
 PyHole==1.5
 PIL==1.1.7
 django-social-auth==0.7.20
+python-dateutil==2.1
