@@ -72,7 +72,6 @@ def home(request):
 def achievements(request):
     achievements = Achievement.objects.filter(Q(secret=False) | Q(sprinter__isnull=False)).distinct()
     secret_achievements = Achievement.objects.filter(secret=True, sprinter__isnull=True)
-    print secret_achievements
 
     return render(request, 'achievements/achievements.html', {
         'achievements': achievements,

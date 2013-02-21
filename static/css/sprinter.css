@@ -61,3 +61,7 @@ img.size_128 {
 .achievement-icon {
     min-width: 66px;
 }
+
+#ranking {
+    min-height: 500px;
+}

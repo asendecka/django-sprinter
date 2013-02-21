@@ -26,7 +26,6 @@ class GithubClient(object):
         page = loads(self.get_pull_requests_page(page_no=page_no))
         stop = False
         for element in page:
-            print "element login", element['user']['login']
             from django.utils import timezone
             current_date = timezone.make_aware(parser.parse(element['created_at']),\
                     timezone.get_default_timezone())
