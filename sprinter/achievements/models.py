@@ -90,11 +90,14 @@ class Achievement(models.Model):
         return True
 
     def get_valid_tickets(self, stats_list, attr_name, valid_tickets, ticket_count):
-        valid_tickets = narrow_results(stats_list[attr_name],\
-                valid_tickets) if valid_tickets else\
-                stats_list[attr_name]
-        if attr_name not in stats_list or\
-                len(valid_tickets) < ticket_count:
+        if valid_tickets:
+            valid_tickets = narrow_results(stats_list[attr_name],\
+                valid_tickets) 
+        elif attr_name in stats_list:
+            valid_tickets = stats_list[attr_name]
+        else:
+            valid_tickets = []
+        if len(valid_tickets) < ticket_count:
             return []
         return valid_tickets
 
