@@ -55,7 +55,7 @@ class GithubImporter(object):
         changes = init_changes(self.logins) 
 
         for pull_request in pull_requests:
-            if pull_request['user']['login'] in self.logins:
+            if pull_request['user']['login'] in self.logins and pull_request['user']['login']:
                 changes[pull_request['user']['login']].append(\
                         pull_request['number'])
 
