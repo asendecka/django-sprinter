@@ -99,22 +99,22 @@ class Achievement(models.Model):
         return valid_tickets
 
     def get_severity(self):
-        if not self.severity:
+        if self.severity == None:
             return None
         return dict(SEVERITIES)[self.severity]
     
     def get_component(self):
-        if not self.component:
+        if self.component == None:
             return None
         return dict(COMPONENTS)[self.component]
     
     def get_ticket_type(self):
-        if not self.ticket_type:
+        if self.ticket_type == None:
             return None
         return dict(TYPES)[self.ticket_type]
     
     def get_resolution(self):
-        if not self.resolution:
+        if self.resolution == None:
             return None
         return dict(RESOLUTIONS)[self.resolution]
 
