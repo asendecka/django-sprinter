@@ -34,8 +34,10 @@ def process_changes(changes, github_changes):
             sprinter = Sprinter.objects.filter(trac_login=author)
         if sprinter:
             sprinter = sprinter[0]
-            pull_requests = github_changes[sprinter.github_login] if\
-                    sprinter.github_login in github_changes else None
+            if sprinter.github_login in github_changes and sprinter.github_login:
+                pull_requests = github_changes[sprinter.github_login]
+            else:
+                pull_requests = None
             grant_achievements(sprinter, tickets, pull_requests)
 
 def get_updated_stat(stats, stat_field, ticket, attributes):
