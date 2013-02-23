@@ -51,14 +51,14 @@ class GithubImporter(object):
     def fetch(self):
         pull_requests = self.github_client.get_recent_pull_requests(\
                 self.start_date) 
-
+        
         changes = init_changes(self.logins) 
-
+         
         for pull_request in pull_requests:
             if pull_request['user']['login'] in self.logins and pull_request['user']['login']:
                 changes[pull_request['user']['login']].append(\
                         pull_request['number'])
-
+        
         return changes
 
 

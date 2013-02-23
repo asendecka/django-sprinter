@@ -14,7 +14,7 @@ class Command(BaseCommand):
         logins = [sprinter.trac_login for sprinter in Sprinter.objects.all()]
         github_logins = [sprinter.github_login for sprinter in\
                 Sprinter.objects.all()]
-        start_date = datetime(2013, 2, 20, 8, 0, 0, 0) # TODO: customize date
+        start_date = datetime(2013, 2, 23, 10, 0, 0, 0) # TODO: customize date
 
         proxy = TicketChangesImporter(user=user, password=password,\
             logins=logins, start_date=start_date)

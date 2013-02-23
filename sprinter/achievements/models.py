@@ -83,14 +83,14 @@ class Achievement(models.Model):
             if not valid_tickets:
                 return False
         
-        if self.pull_request_count and 'pull_requests' in stats and stats['pull_requests']:
-            if len(stats['pull_requests']) < self.pull_request_count:
+        if self.pull_request_count and 'pull_requests' in stats:
+            if not stats['pull_requests'] or len(stats['pull_requests']) < self.pull_request_count:
                 return False
 
         return True
 
     def get_valid_tickets(self, stats_list, attr_name, valid_tickets, ticket_count):
-        if valid_tickets:
+        if valid_tickets and attr_name in stats_list:
             valid_tickets = narrow_results(stats_list[attr_name],\
                 valid_tickets) 
         elif attr_name in stats_list:
