@@ -12,7 +12,7 @@
 <table class="table table-striped">
     {% for achievement in achievements %}
     <tr class="achievement">
-        <td>
+        <td class="achievement-icon">
             <a href="{% url 'achievement' pk=achievement.pk %}">{% if achievement.picture %}<img src="{{ achievement.picture.url }}" title="{{ achievement }}" class="img-rounded size_64"/>{% endif %}</a>
         </td>
         <td>
