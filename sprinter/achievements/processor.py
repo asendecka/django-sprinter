@@ -28,10 +28,12 @@ def process_changes(changes, github_changes):
     statistics"""
     
     for author, tickets in changes.items():
-        if '@' in author:
+        if author and '@' in author:
             sprinter = Sprinter.objects.filter(trac_email=author)
-        else:
+        elif author:
             sprinter = Sprinter.objects.filter(trac_login=author)
+        else:
+            sprinter = None
         if sprinter:
             sprinter = sprinter[0]
             if sprinter.github_login in github_changes and sprinter.github_login:
