@@ -50,7 +50,7 @@ def grant_achievements(sprinter, tickets, pull_requests):
     achievements = Achievement.objects.all()
     stats = generate_stats(tickets, pull_requests)
     for achievement in achievements:
-        if achievement.can_grant_achievement(stats):
+        if achievement.can_grant_achievement(stats): 
             sprinter.achievements.add(achievement)
 
 def generate_stats(tickets, pull_requests):

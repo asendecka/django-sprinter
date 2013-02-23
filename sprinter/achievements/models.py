@@ -59,25 +59,25 @@ class Achievement(models.Model):
             if len(valid_tickets) < self.comment_count:
                 return False
 
-        if self.severity:
+        if self.severity != None:
             valid_tickets = self.get_valid_tickets(stats['severity'],\
                     self.severity, valid_tickets, ticket_count)
             if not valid_tickets:
                 return False
-
-        if self.resolution:
+        
+        if self.resolution != None:
             valid_tickets = self.get_valid_tickets(stats['resolution'],\
                     self.resolution, valid_tickets, ticket_count)
             if not valid_tickets:
                 return False
 
-        if self.ticket_type:
+        if self.ticket_type != None:
             valid_tickets = self.get_valid_tickets(stats['type'],\
                     self.ticket_type, valid_tickets, ticket_count)
             if not valid_tickets:
                 return False
 
-        if self.component:
+        if self.component != None:
             valid_tickets = self.get_valid_tickets(stats['component'],\
                     self.component, valid_tickets, ticket_count)
             if not valid_tickets:
