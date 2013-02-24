@@ -29,9 +29,9 @@ def process_changes(changes, github_changes):
     
     for author, tickets in changes.items():
         if author and '@' in author:
-            sprinter = Sprinter.objects.filter(trac_email_iexact=author)
+            sprinter = Sprinter.objects.filter(trac_email__iexact=author)
         elif author:
-            sprinter = Sprinter.objects.filter(trac_login_iexact=author)
+            sprinter = Sprinter.objects.filter(trac_login__iexact=author)
         else:
             sprinter = None
         if sprinter:
