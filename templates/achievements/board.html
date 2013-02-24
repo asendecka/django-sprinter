@@ -13,7 +13,7 @@
     {% for sprinter in sprinters %}
     <tr class="sprinter">
         <td class="rank">{{ forloop.counter }}.</td>
-        <td>
+        <td class="sprinter-icon">
         {% if sprinter.get_email_hash %}
             <img class="img-rounded" src="http://www.gravatar.com/avatar/{{ sprinter.get_email_hash }}?s=64"/></a>
         {% endif %}
