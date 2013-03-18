@@ -7,6 +7,7 @@ django-discover-runner==0.2.2
 expecter==0.2.2
 South==0.7.6
 PyHole==1.5
-PIL==1.1.7
 django-social-auth==0.7.20
 python-dateutil==2.1
+hurl==2.0
+Pillow==2.0.0

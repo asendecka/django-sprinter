@@ -1,12 +1,12 @@
-from django.conf.urls import patterns, url
+import hurl
 
-urlpatterns = patterns('',
-	url(r'^$', 'sprinter.achievements.views.board', name='board'),
-	url(r'^home/$', 'sprinter.achievements.views.home', name='home'),
-	url(r'^(?P<pk>[0-9]+)/$', 'sprinter.achievements.views.sprinter_detail', name='sprinter_detail'),
-	url(r'^achievements/$', 'sprinter.achievements.views.achievements', name='achievements'),
-	url(r'^achievement/(?P<pk>[0-9]+)/$', 'sprinter.achievements.views.achievement_detail', name='achievement'),
-    # TODO: remove
-    (r'^test/$', 'sprinter.achievements.views.test_trac'),
-    (r'^test_git/$', 'sprinter.achievements.views.test_github'),
-)
+
+urlpatterns = hurl.patterns('sprinter.achievements.views', [
+    ('', 'board'),
+    ('home', 'home'),
+    ('<pk:int>', 'sprinter_detail'),
+    ('achievements', [
+        ('', 'achievements'),
+        ('<pk:int>', 'achievement_detail')
+    ])
+])
