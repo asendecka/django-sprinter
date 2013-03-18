@@ -47,7 +47,6 @@ class ImporterTest(TestCase):
         expect(ticket.changes.count()) == 2
 
 
-
 class FakeProxy(object):
     def get_recent_changes(self, since):
         assert isinstance(since, datetime)

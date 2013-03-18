@@ -16,5 +16,3 @@ class Change(models.Model):
     author = models.CharField(max_length=250, blank=True)
     old_value = models.CharField(max_length=250, blank=True)
     new_value = models.CharField(max_length=250, blank=True)
-
-

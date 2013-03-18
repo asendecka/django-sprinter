@@ -29,19 +29,27 @@ class Importer(object):
 
     def sync_ticket_changes(self, ticket):
         ticket_changelog_data = self.proxy.get_ticket_changelog(ticket.pk)
-        try:
-            last_recorded_change = ticket.changes.latest('timestamp')
-            last_recorded_timestamp = last_recorded_change.timestamp
-        except Change.DoesNotExist:
-            last_recorded_timestamp = make_aware(datetime(1970, 1, 1), utc)
+        last_recorded_timestamp = self.last_recorded_timestamp(ticket)
+
         for data in ticket_changelog_data:
             time, author, field, old_value, new_value, permanent = data
-            timestamp = datetime.strptime(time.value, "%Y%m%dT%H:%M:%S")
-            timestamp = make_aware(timestamp, utc)
+            timestamp = self.standardize_datetime(time)
 
             if timestamp > last_recorded_timestamp:
                 ticket.changes.create(
                     timestamp=timestamp, author=author, field=field,
                     old_value=old_value, new_value=new_value)
+
+    def standardize_datetime(self, time):
+        timestamp = datetime.strptime(time.value, "%Y%m%dT%H:%M:%S")
+        return make_aware(timestamp, utc)
+
+    def last_recorded_timestamp(self, ticket):
+        try:
+            last_recorded_change = ticket.changes.latest('timestamp')
+            last_recorded_timestamp = last_recorded_change.timestamp
+        except Change.DoesNotExist:
+            last_recorded_timestamp = make_aware(datetime(1970, 1, 1), utc)
+        return last_recorded_timestamp
 
 
