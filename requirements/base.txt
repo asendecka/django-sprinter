@@ -11,3 +11,4 @@ django-social-auth==0.7.20
 python-dateutil==2.1
 hurl==2.0
 Pillow==2.0.0
+sef==0.9

@@ -14,10 +14,10 @@ framework.
 
 """
 import os
+import sef
 
-# This is disabled to avoid launching with wrong settings file
-# "Explicit is better than implicit"
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sprinter.settings")
+env_file_name = os.path.join(os.path.dirname(__file__), '.env')
+sef.set_defaults(env_file_name)
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
