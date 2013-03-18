@@ -8,6 +8,24 @@ class Ticket(models.Model):
     status = models.CharField(max_length=250, blank=True)
     severity = models.CharField(max_length=250, blank=True)
 
+    def snapshot_at(self, timestamp):
+        attrs = {
+            'kind': self.kind,
+            'component': self.component,
+            'resolution': self.resolution,
+            'status': self.status,
+            'severity': self.severity
+        }
+        for change in self.changes.order_by('-timestamp'):
+            if change.timestamp < timestamp:
+                break
+            field = change.field
+            if field == 'type':
+                field = 'kind'
+            if field in attrs:
+                attrs[field] = change.old_value
+        return TimeFrozenTicket(id=self.pk, **attrs)
+
 
 class Change(models.Model):
     ticket = models.ForeignKey(Ticket, related_name='changes')
@@ -16,3 +34,13 @@ class Change(models.Model):
     author = models.CharField(max_length=250, blank=True)
     old_value = models.CharField(max_length=250, blank=True)
     new_value = models.CharField(max_length=250, blank=True)
+
+
+class TimeFrozenTicket(object):
+    def __init__(self, id, kind, component, resolution, status, severity):
+        self.id = id
+        self.kind = kind
+        self.component = component
+        self.resolution = resolution
+        self.status = status
+        self.severity = severity
