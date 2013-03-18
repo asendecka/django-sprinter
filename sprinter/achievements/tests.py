@@ -4,10 +4,12 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 
 from sprinter.achievements.models import Sprinter, Achievement
-from sprinter.achievements.proxies import TicketChangesImporter
+from sprinter.achievements.proxies import TicketChangesImporter, \
+        GithubImporter
 from sprinter.achievements.processor import process_changes
 
-from sprinter.achievements.test_data import RECENT_CHANGES, RECENT_TICKETS
+from sprinter.achievements.test_data import RECENT_CHANGES, RECENT_TICKETS, \
+        PULL_REQUESTS
 from sprinter.achievements.trac_types import *
 
 class TracClient(object):
@@ -21,6 +23,15 @@ class TracClient(object):
     def get_ticket(self, ticket):
         return list(RECENT_TICKETS[ticket]['ticket'])
 
+class GithubClient(object):
+
+    def get_pull_requests_page(self, page_no=None):
+        return PULL_REQUESTS
+
+    def get_recent_pull_requests(self, start_date, page_no=None):
+        return PULL_REQUESTS
+
+
 class AchievementsTestCase(TestCase):
 
     def setUp(self):
@@ -29,17 +40,26 @@ class AchievementsTestCase(TestCase):
                 trac_login='testuser', 
                 trac_email='testuser@django.org',
                 user=self.user,
+                github_login='sprinter',
         ) 
         self.logins = [sprinter.trac_login for sprinter in Sprinter.objects.all()]
+        self.github_logins = [sprinter.github_login for sprinter in Sprinter.objects.all()]
         self.start_date = datetime(2013, 2, 1, 10, 0, 0, 0) 
         self.proxy = TicketChangesImporter(user='', password='',\
             logins=self.logins, start_date=self.start_date,\
             trac_client=TracClient())
+        self.proxy = TicketChangesImporter(user='', password='',\
+            logins=self.logins, start_date=self.start_date,\
+            trac_client=TracClient())
+        
+        self.logins = [sprinter.trac_login for sprinter in Sprinter.objects.all()]
+        self.github_proxy = GithubImporter(logins=self.github_logins, \
+                start_date=self.start_date, github_client=GithubClient())
     
     def _check_achievements(self, expects_count):
         self.assertEqual(0, self.sprinter.achievements.count())
         changes = self.proxy.fetch()
-        process_changes(changes)
+        process_changes(changes, [])
         self.assertEqual(expects_count, self.sprinter.achievements.count())
 
     def test_ticket_count(self):
@@ -121,3 +141,26 @@ class AchievementsTestCase(TestCase):
                 component=CM_URLS, ticket_type=TP_BUG)
 
         self._check_achievements(expects_count=2)
+
+    def test_pull_request(self):
+        achievement = Achievement.objects.create(name='Github',\
+                description='Some description.', pull_request_count=1)
+        
+        achievement = Achievement.objects.create(name='Github Multi',\
+                description='Some description.', pull_request_count=2)
+
+        changes = self.github_proxy.fetch()
+        process_changes({}, changes)
+        self.assertEqual(1, self.sprinter.achievements.count())
+    
+    def test_pull_request_empty_login(self):
+        achievement = Achievement.objects.create(name='Github',\
+                description='Some description.', pull_request_count=1)
+        
+        achievement = Achievement.objects.create(name='Github Multi',\
+                description='Some description.', pull_request_count=2)
+        
+        self.assertEqual(0, self.sprinter.achievements.count())
+        changes = self.github_proxy.fetch()
+        process_changes({}, changes)
+        self.assertEqual(0, self.sprinter.achievements.count())

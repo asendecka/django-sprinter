@@ -27,3 +27,27 @@ RECENT_TICKETS = {
                 'resolution': 'wontfix', 'severity': 'Release blocker'}],
     }        
 }
+
+PULL_REQUESTS = [
+    {
+        "created_at": "2013-02-22T15:45:46Z",
+        "number": 747,
+        "user": {
+            "login": "sprinter",
+        }
+    }, 
+    {
+        "created_at": "2011-02-22T15:45:46Z",
+        "number": 447,
+        "user": {
+            "login": "sprinter",
+        }
+    }, 
+    {
+        "created_at": "2013-02-22T15:45:46Z",
+        "number": 117,
+        "user": {
+            "login": "",
+        }
+    }, 
+]
