@@ -108,6 +108,7 @@ INSTALLED_APPS = (
     'compressor',
     'south',
     'social_auth',
+    'sprinter.userprofile',
     'sprinter.trac',
     'sprinter.achievements',
 )
@@ -143,7 +144,7 @@ LOGGING = {
     }
 }
 
-AUTH_PROFILE_MODULE = 'achievements.Sprinter'
+AUTH_PROFILE_MODULE = 'userprofile.Sprinter'
 
 AUTHENTICATION_BACKENDS = (
     'social_auth.backends.twitter.TwitterBackend',
@@ -162,5 +163,5 @@ TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET', None)
 GITHUB_APP_ID = os.environ.get('GITHUB_APP_ID', None)
 GITHUB_API_SECRET = os.environ.get('GITHUB_API_SECRET', None)
 
-SOCIAL_AUTH_COMPLETE_URL_NAME  = 'socialauth_complete'
+SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'

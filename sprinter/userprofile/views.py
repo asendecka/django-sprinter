@@ -1,13 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout
 
-from sprinter.achievements.models import Sprinter
 from sprinter.achievements.forms import SprinterForm
+from sprinter.userprofile.models import Sprinter
+
 
 def signin(request):
     if request.user.is_authenticated():
         return redirect('/home/')
     return render(request, 'signin.html', {})
+
 
 def edit_profile(request):
     user = request.user
@@ -25,6 +27,7 @@ def edit_profile(request):
         'active': 'edit',
         'saved': saved,
     })
+
 
 def signout(request):
     logout(request)

@@ -1,6 +1,7 @@
 from django import forms
 
-from sprinter.achievements.models import Sprinter
+from sprinter.userprofile.models import Sprinter
+
 
 class SprinterForm(forms.ModelForm):
     gravatar_email = forms.EmailField(label="Gravatar email", required=False)

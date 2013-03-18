@@ -1,11 +1,10 @@
-from hashlib import md5
-
 from django.db import models
-from django.contrib.auth.models import User
 
 from social_auth.signals import socialauth_registered
 
 from sprinter.achievements.trac_types import *
+from sprinter.userprofile.models import new_users_handler
+
 
 def narrow_results(current, valid):
     """Narrow results from stats to ticket ids previously taken into account."""
@@ -124,31 +123,6 @@ class Achievement(models.Model):
     def __unicode__(self):
         return self.name
 
-class Sprinter(models.Model):
-    """Sprint participant profile. Stores all necessary data to identify the 
-    user in Trac and Github."""
-
-    user = models.OneToOneField(User)
-    trac_login = models.CharField('Trac login', max_length=255,\
-            null=True, blank=True)
-    trac_email = models.EmailField('Trac e-mail', blank=True, null=True)
-    github_login = models.CharField('Github login', max_length=255,\
-            null=True, blank=True)
-    achievements = models.ManyToManyField(Achievement)
-
-    def __unicode__(self):
-        return unicode(self.user)
-
-    def get_email_hash(self):
-        if self.user.email:
-            return md5(self.user.email).hexdigest()
-        if self.trac_email:
-            return md5(self.trac_email).hexdigest()
-        return ''
-
-def new_users_handler(sender, user, response, details, **kwargs):
-    # create Sprinter 
-    sprinter = Sprinter.objects.create(user=user)
 
 
-socialauth_registered.connect(new_users_handler, sender=None)
+

@@ -1,8 +1,10 @@
-from sprinter.achievements.models import Sprinter, Achievement
+from sprinter.achievements.models import Achievement
 from sprinter.achievements.trac_types import *
 
 # index in ticket list with dictionary of ticket attributes
-TICKET_ATTRIBUTES = 3 
+from sprinter.userprofile.models import Sprinter
+
+TICKET_ATTRIBUTES = 3
 
 # list of attribute names
 STAT_FIELDS = ['type', 'component', 'resolution', 'severity', ]

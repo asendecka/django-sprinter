@@ -3,8 +3,10 @@ from datetime import datetime
 from django.core.management.base import BaseCommand, CommandError
 
 from sprinter.achievements.proxies import TicketChangesImporter, GithubImporter
-from sprinter.achievements.models import Sprinter, Achievement
+from sprinter.achievements.models import Achievement
 from sprinter.achievements.processor import process_changes
+from sprinter.userprofile.models import Sprinter
+
 
 class Command(BaseCommand):
     args = '<user> <password>'

@@ -3,7 +3,7 @@ from datetime import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from sprinter.achievements.models import Sprinter, Achievement
+from sprinter.achievements.models import Achievement
 from sprinter.achievements.proxies import TicketChangesImporter, \
         GithubImporter
 from sprinter.achievements.processor import process_changes
@@ -11,6 +11,8 @@ from sprinter.achievements.processor import process_changes
 from sprinter.achievements.test_data import RECENT_CHANGES, RECENT_TICKETS, \
         PULL_REQUESTS
 from sprinter.achievements.trac_types import *
+from sprinter.userprofile.models import Sprinter
+
 
 class TracClient(object):
 
