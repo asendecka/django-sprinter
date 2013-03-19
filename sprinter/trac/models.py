@@ -35,6 +35,9 @@ class Change(models.Model):
     old_value = models.CharField(max_length=250, blank=True)
     new_value = models.CharField(max_length=250, blank=True)
 
+    def ticket_snapshot(self):
+        return self.ticket.snapshot_at(self.timestamp)
+
 
 class TimeFrozenTicket(object):
     def __init__(self, id, kind, component, resolution, status, severity):
@@ -44,3 +47,8 @@ class TimeFrozenTicket(object):
         self.resolution = resolution
         self.status = status
         self.severity = severity
+
+    @property
+    def attrs(self):
+        names = ('kind', 'component', 'resolution', 'status', 'severity')
+        return {name: getattr(self, name) for name in names}

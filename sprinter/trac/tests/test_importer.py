@@ -1,15 +1,18 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from xmlrpclib import DateTime
+from django.contrib.auth.models import User
 from django.test import TestCase
+from django.utils.timezone import utc, make_aware
 from expecter import expect
 from sprinter.trac.importer import Importer
 from sprinter.trac.models import Ticket
+from sprinter.userprofile.models import SprinterChange, Sprinter
 
 
 class ImporterTest(TestCase):
     def setUp(self):
-        self.proxy = FakeProxy()
-        self.since = datetime(2013, 1, 1, 13, 46)
+        self.since = make_aware(datetime(2013, 1, 1, 13, 46), utc)
+        self.proxy = FakeProxy(self.since)
         self.importer = Importer(self.proxy)
 
     def test_changed_tickets_get_created(self):
@@ -46,15 +49,28 @@ class ImporterTest(TestCase):
         ticket = Ticket.objects.all()[0]
         expect(ticket.changes.count()) == 2
 
+    def test_no_sprinter_no_change(self):
+        self.importer.sync(self.since)
+        expect(SprinterChange.objects.count()) == 0
+
+    def test_adds_sprinter_changes(self):
+        user = User.objects.create(username='alice')
+        Sprinter.objects.create(user=user, trac_login='alice')
+        self.importer.sync(self.since - timedelta(hours=1))
+        expect(SprinterChange.objects.count()) == 2
+
 
 class FakeProxy(object):
+    def __init__(self, dt=None):
+        self.dt = dt or datetime(2010, 1, 1, 13, 45)
+
     def get_recent_changes(self, since):
         assert isinstance(since, datetime)
         return [1234, 12345]
 
     def get_ticket_changelog(self, ticket_id):
         assert isinstance(ticket_id, int)
-        dt = DateTime(datetime(2010, 1, 1, 13, 45))
+        dt = DateTime(self.dt)
         return [
             [dt, 'alice', 'comment', '28', '', 1],
             [dt, 'bob', 'status', 'new', 'assigned', 1],
@@ -62,7 +78,7 @@ class FakeProxy(object):
 
     def get_ticket(self, ticket_id):
         assert isinstance(ticket_id, int)
-        dt = DateTime(datetime(2010, 1, 1, 13, 45))
+        dt = DateTime(self.dt)
         attributes = {
             'component': 'Forms',
             'severity': 'Normal',

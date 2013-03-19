@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.utils.timezone import utc, make_aware
 from sprinter.trac.models import Ticket, Change
+from sprinter.userprofile.models import Sprinter
 
 
 class Importer(object):
@@ -11,6 +12,7 @@ class Importer(object):
         ticket_ids = self.proxy.get_recent_changes(since)
         for ticket_id in ticket_ids:
             self.sync_ticket(ticket_id)
+        self.associate_sprinters_with_changes(since)
 
     def sync_ticket(self, ticket_id):
         ticket_data = self.proxy.get_ticket(ticket_id)
@@ -52,4 +54,12 @@ class Importer(object):
             last_recorded_timestamp = make_aware(datetime(1970, 1, 1), utc)
         return last_recorded_timestamp
 
-
+    def associate_sprinters_with_changes(self, since):
+        ticket_changes = Change.objects.filter(timestamp__gt=since)
+        for change in ticket_changes:
+            try:
+                sprinter = Sprinter.objects.get_by_trac_author(change.author)
+            except Sprinter.DoesNotExist:
+                continue
+            frozen_ticket = change.ticket_snapshot()
+            sprinter.changes.create(ticket_change=change, **frozen_ticket.attrs)

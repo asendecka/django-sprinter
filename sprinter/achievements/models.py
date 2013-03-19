@@ -1,9 +1,5 @@
 from django.db import models
-
-from social_auth.signals import socialauth_registered
-
 from sprinter.achievements.trac_types import *
-from sprinter.userprofile.models import new_users_handler
 
 
 def narrow_results(current, valid):
