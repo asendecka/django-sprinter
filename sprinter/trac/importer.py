@@ -62,4 +62,5 @@ class Importer(object):
             except Sprinter.DoesNotExist:
                 continue
             frozen_ticket = change.ticket_snapshot()
-            sprinter.changes.create(ticket_change=change, **frozen_ticket.attrs)
+            sprinter.changes.create(
+                ticket_change=change, field=change.field, **frozen_ticket.attrs)
