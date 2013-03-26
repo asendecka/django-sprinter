@@ -63,4 +63,5 @@ class Importer(object):
                 continue
             frozen_ticket = change.ticket_snapshot()
             sprinter.changes.create(
-                ticket_change=change, field=change.field, **frozen_ticket.attrs)
+                ticket_change=change, field=change.field,
+                ticket_id=change.ticket_id, **frozen_ticket.attrs)

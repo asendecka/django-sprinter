@@ -44,10 +44,11 @@ def new_users_handler(sender, user, response, details, **kwargs):
 
 class SprinterChange(models.Model):
     sprinter = models.ForeignKey(Sprinter, related_name='changes')
-    ticket_change = models.OneToOneField('trac.Change')
+    ticket_change = models.OneToOneField('trac.Change', null=True, blank=True)
     kind = models.CharField('trac type', max_length=250, blank=True)
     component = models.CharField(max_length=250, blank=True)
     resolution = models.CharField(max_length=250, blank=True)
     status = models.CharField(max_length=250, blank=True)
     severity = models.CharField(max_length=250, blank=True)
+    ticket_id = models.IntegerField()
     field = models.CharField(max_length=250)

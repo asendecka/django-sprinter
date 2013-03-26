@@ -1,120 +1,72 @@
 from django.db import models
-from sprinter.achievements.trac_types import *
+import sprinter.trac.const as trac
 
-
-def narrow_results(current, valid):
-    """Narrow results from stats to ticket ids previously taken into account."""
-    return [f for f in current if f in valid]
 
 class Achievement(models.Model):
     """Achievement with fields that specify the set of rules to gain it. 
     For now all rule fields works with AND (user has to satisfy all non-null 
-    rules to receive an achievement)."""
+    rules to receive an achievement).
+    """
 
     name = models.CharField('Achievement title', max_length=255)
     description = models.CharField('Description', max_length=2000)
     picture = models.ImageField(upload_to='achievements', null=True)
     secret = models.BooleanField('Is secret achievement', default=False)
 
-    ticket_count = models.IntegerField(null=True, blank=True)
+    ticket_count = models.IntegerField(default=1)
     attachment_count = models.IntegerField(null=True, blank=True)
     comment_count = models.IntegerField(null=True, blank=True)
-
-    # current status of the ticket (no matter if user changed it to the given state or not)
-    severity = models.IntegerField(choices=SEVERITIES, null=True, blank=True)
-    resolution = models.IntegerField(choices=RESOLUTIONS, null=True, blank=True)
-    ticket_type = models.IntegerField(choices=TYPES, null=True, blank=True)
-    component = models.IntegerField(choices=COMPONENTS, null=True,\
-            blank=True)
-
     pull_request_count = models.IntegerField(null=True, blank=True)
 
-    def can_grant_achievement(self, stats):
-        """Simple achievement logic. Should be extended to something 
-        more complicated with checking ticket ids in some stats."""
-        valid_tickets = None
-        if self.ticket_count:
-            valid_tickets = stats['ticket_count'] 
-            if len(stats['ticket_count']) < self.ticket_count:
-                return False
+    severity = models.CharField(
+        max_length=250, choices=trac.SEVERITIES_CHOICES, blank=True)
+    resolution = models.CharField(
+        max_length=250, choices=trac.RESOLUTIONS_CHOICES, blank=True)
+    kind = models.CharField(
+        max_length=250, choices=trac.TYPES_CHOICES, blank=True)
+    component = models.CharField(
+        max_length=250, choices=trac.COMPONENTS_CHOICES, blank=True)
 
-        ticket_count = self.ticket_count if self.ticket_count else 1
+    def can_unlock(self, sprinter):
+        sprinter_changes = self.get_changes(sprinter)
+        return self.ticket_count_ok(sprinter_changes) and \
+            self.comment_count_ok(sprinter_changes) and \
+            self.attachment_count_ok(sprinter_changes)
 
-        if self.attachment_count:
-            valid_tickets = narrow_results(stats['attachment_count'],\
-                    valid_tickets) if valid_tickets else\
-                    stats['attachment_count']
-            if len(valid_tickets) < self.attachment_count:
-                return False
-
-        if self.comment_count:
-            valid_tickets = narrow_results(stats['comment_count'],\
-                    valid_tickets) if valid_tickets else\
-                    stats['comment_count']
-            if len(valid_tickets) < self.comment_count:
-                return False
-
-        if self.severity != None:
-            valid_tickets = self.get_valid_tickets(stats['severity'],\
-                    self.severity, valid_tickets, ticket_count)
-            if not valid_tickets:
-                return False
-        
-        if self.resolution != None:
-            valid_tickets = self.get_valid_tickets(stats['resolution'],\
-                    self.resolution, valid_tickets, ticket_count)
-            if not valid_tickets:
-                return False
-
-        if self.ticket_type != None:
-            valid_tickets = self.get_valid_tickets(stats['type'],\
-                    self.ticket_type, valid_tickets, ticket_count)
-            if not valid_tickets:
-                return False
-
-        if self.component != None:
-            valid_tickets = self.get_valid_tickets(stats['component'],\
-                    self.component, valid_tickets, ticket_count)
-            if not valid_tickets:
-                return False
-        
-        if self.pull_request_count and 'pull_requests' in stats:
-            if not stats['pull_requests'] or len(stats['pull_requests']) < self.pull_request_count:
-                return False
-
+    def ticket_count_ok(self, sprinter_changes):
+        tickets = {change.ticket_id for change in sprinter_changes}
+        ticket_count = len(tickets)
+        if self.ticket_count > ticket_count:
+            return False
         return True
 
-    def get_valid_tickets(self, stats_list, attr_name, valid_tickets, ticket_count):
-        if valid_tickets and attr_name in stats_list:
-            valid_tickets = narrow_results(stats_list[attr_name],\
-                valid_tickets) 
-        elif attr_name in stats_list:
-            valid_tickets = stats_list[attr_name]
-        else:
-            valid_tickets = []
-        if len(valid_tickets) < ticket_count:
-            return []
-        return valid_tickets
+    def comment_count_ok(self, sprinter_changes):
+        if not self.comment_count:
+            return True
+        comment_tickets = {
+            change.ticket_id for change in sprinter_changes
+            if change.field == 'comment'
+        }
+        comment_count = len(comment_tickets)
+        return self.comment_count <= comment_count
 
-    def get_severity(self):
-        if self.severity == None:
-            return None
-        return dict(SEVERITIES)[self.severity]
-    
-    def get_component(self):
-        if self.component == None:
-            return None
-        return dict(COMPONENTS)[self.component]
-    
-    def get_ticket_type(self):
-        if self.ticket_type == None:
-            return None
-        return dict(TYPES)[self.ticket_type]
-    
-    def get_resolution(self):
-        if self.resolution == None:
-            return None
-        return dict(RESOLUTIONS)[self.resolution]
+    def attachment_count_ok(self, sprinter_changes):
+        if not self.attachment_count:
+            return True
+        attachment_tickets = {
+            change.ticket_id for change in sprinter_changes
+            if change.field == 'attachment'
+        }
+        attachment_count = len(attachment_tickets)
+        return self.attachment_count <= attachment_count
+
+    def get_changes(self, sprinter):
+        qs = sprinter.changes.all()
+        for property_name in ['severity', 'resolution', 'kind', 'component']:
+            property = getattr(self, property_name)
+            if property:
+                qs = qs.filter(**{property_name: property})
+        return list(qs)
 
     def __unicode__(self):
         return self.name

@@ -58,12 +58,13 @@ class ImporterTest(TestCase):
         sprinter = Sprinter.objects.create(user=user, trac_login='alice')
         self.importer.sync(self.since - timedelta(hours=1))
         expect(SprinterChange.objects.count()) == 2
-        sprinter_change = sprinter.changes.all()[0]
+        sprinter_change = sprinter.changes.latest('pk')
         expect(sprinter_change.field) == u'comment'
         expect(sprinter_change.kind) == u'New feature'
         expect(sprinter_change.status) == u'new'
         expect(sprinter_change.severity) == u'Normal'
         expect(sprinter_change.resolution) == u''
+        expect(sprinter_change.ticket_id) == 12345
 
 
 class FakeProxy(object):
