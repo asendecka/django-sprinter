@@ -27,8 +27,7 @@ class Achievement(models.Model):
     component = models.CharField(
         max_length=250, choices=trac.COMPONENTS_CHOICES, blank=True)
 
-    def can_unlock(self, sprinter):
-        sprinter_changes = self.get_changes(sprinter)
+    def can_unlock(self, sprinter_changes):
         return self.ticket_count_ok(sprinter_changes) and \
             self.comment_count_ok(sprinter_changes) and \
             self.attachment_count_ok(sprinter_changes)
@@ -60,17 +59,27 @@ class Achievement(models.Model):
         attachment_count = len(attachment_tickets)
         return self.attachment_count <= attachment_count
 
-    def get_changes(self, sprinter):
-        qs = sprinter.changes.all()
-        for property_name in ['severity', 'resolution', 'kind', 'component']:
-            property = getattr(self, property_name)
-            if property:
-                qs = qs.filter(**{property_name: property})
-        return list(qs)
+    def relevant_changes(self, sprinter_changes):
+        return [sc for sc in sprinter_changes if self.is_relevant(sc)]
+
+    def is_relevant(self, sprinter_change):
+        attributes = ['component', 'severity', 'resolution', 'kind']
+        for attr in attributes:
+            value = getattr(self, attr)
+            if value and value != getattr(sprinter_change, attr):
+                return False
+        return True
 
     def __unicode__(self):
         return self.name
 
 
+class Processor(object):
+    def __init__(self, achievements):
+        self.achievements = achievements
+
+    def earned_achievements(self, sprinter_changes):
+        return [achievement for achievement in self.achievements
+                if achievement.can_unlock(sprinter_changes)]
 
 

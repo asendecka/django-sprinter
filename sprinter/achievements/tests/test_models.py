@@ -1,8 +1,7 @@
-from django.contrib.auth.models import User
 from django.test import TestCase
 from expecter import expect
-from sprinter.achievements.models import Achievement
-from sprinter.userprofile.models import SprinterChange, Sprinter
+from sprinter.achievements.models import Achievement, Processor
+from sprinter.userprofile.models import SprinterChange
 
 
 class AchievementTest(TestCase):
@@ -50,27 +49,65 @@ class AchievementTest(TestCase):
         achievement = Achievement(ticket_count=2)
         expect(achievement.ticket_count_ok(changes)) == False
 
-    def check_achievement_property(self, property_name):
-        user = User.objects.create()
-        sprinter = Sprinter.objects.create(user=user)
-        a = SprinterChange.objects.create(
-            **{'sprinter': sprinter, property_name: 'a', 'ticket_id': 1})
-        b = SprinterChange.objects.create(
-            **{'sprinter': sprinter, property_name: 'b', 'ticket_id': 1})
+    attributes = ['component', 'severity', 'resolution', 'kind']
+
+    def test_is_relevant_single_ok(self):
+        for attribute in self.attributes:
+            change = SprinterChange(**{attribute: 'ok'})
+            achievement = Achievement(**{attribute: 'ok'})
+            expect(achievement.is_relevant(change)) == True
+
+    def test_is_relevant_single_fail(self):
+        for attribute in self.attributes:
+            change = SprinterChange(**{attribute: 'ok'})
+            achievement = Achievement(**{attribute: 'not ok'})
+            expect(achievement.is_relevant(change)) == False
+
+    def test_is_relevant_component_not_specified(self):
         achievement = Achievement()
-        setattr(achievement, property_name, 'a')
-        changes = achievement.get_changes(sprinter)
-        expect(changes).contains(a)
-        expect(changes).does_not_contain(b)
+        for attribute in self.attributes:
+            change = SprinterChange(**{attribute: 'ok'})
+            expect(achievement.is_relevant(change)) == True
 
-    def test_get_changes_component(self):
-        self.check_achievement_property('component')
+    def test_is_relevant_many_ok(self):
+        kwargs = {attr: attr for attr in self.attributes}
+        change = SprinterChange(**kwargs)
+        kwargs.pop('component')
+        achievement = Achievement(**kwargs)
+        expect(achievement.is_relevant(change)) == True
 
-    def test_get_changes_resolution(self):
-        self.check_achievement_property('resolution')
+    def test_is_relevant_many_fail(self):
+        kwargs = {attr: attr for attr in self.attributes}
+        achievement = Achievement(**kwargs)
+        kwargs.pop('component')
+        change = SprinterChange(**kwargs)
+        expect(achievement.is_relevant(change)) == False
 
-    def test_get_changes_kind(self):
-        self.check_achievement_property('kind')
+    def test_relevant_changes(self):
+        ok = SprinterChange(pk=1, component='Forms')
+        not_ok = SprinterChange(pk=2, component='ORM')
+        achievement = Achievement(component='Forms')
+        changes = [ok, not_ok]
+        filtered = achievement.relevant_changes(changes)
+        expect(filtered) == [ok]
 
-    def test_get_changes_severity(self):
-        self.check_achievement_property('severity')
+
+class ProcessorTest(TestCase):
+    def test_earns_only_unlockable_achievements(self):
+        ok = FakeAchievement()
+        not_ok = FakeAchievement(can_unlock=False)
+        achievements = [ok, not_ok]
+        sprinter_changes = [SprinterChange()]
+        processor = Processor(achievements)
+        earned = processor.earned_achievements(sprinter_changes)
+        expect(earned) == [ok]
+
+
+class FakeAchievement(object):
+    def __init__(self, can_unlock=True, relevant=()):
+        self._can_unlock = can_unlock
+        self._relevant = set(relevant)
+
+    def can_unlock(self, sprinter_changes):
+        return self._can_unlock
+
