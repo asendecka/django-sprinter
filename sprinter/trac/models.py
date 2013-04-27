@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class Ticket(models.Model):
@@ -26,17 +27,24 @@ class Ticket(models.Model):
                 attrs[field] = change.old_value
         return TimeFrozenTicket(id=self.pk, **attrs)
 
+    def __unicode__(self):
+        return u'#%d' % self.id
+
 
 class Change(models.Model):
     ticket = models.ForeignKey(Ticket, related_name='changes')
     timestamp = models.DateTimeField()
     field = models.CharField(max_length=250, blank=True)
     author = models.CharField(max_length=250, blank=True)
-    old_value = models.CharField(max_length=250, blank=True)
-    new_value = models.CharField(max_length=250, blank=True)
+    old_value = models.TextField(blank=True)
+    new_value = models.TextField(blank=True)
 
     def ticket_snapshot(self):
         return self.ticket.snapshot_at(self.timestamp)
+
+    def __unicode__(self):
+        return u'%s on ticket %d (%s)' % (
+            self.author, self.ticket_id, self.field)
 
 
 class TimeFrozenTicket(object):
@@ -52,3 +60,7 @@ class TimeFrozenTicket(object):
     def attrs(self):
         names = ('kind', 'component', 'resolution', 'status', 'severity')
         return {name: getattr(self, name) for name in names}
+
+
+class ImportRun(models.Model):
+    timestamp = models.DateTimeField(default=timezone.now)
