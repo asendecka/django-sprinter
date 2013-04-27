@@ -163,5 +163,8 @@ TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET', None)
 GITHUB_APP_ID = os.environ.get('GITHUB_APP_ID', None)
 GITHUB_API_SECRET = os.environ.get('GITHUB_API_SECRET', None)
 
+TRAC_USER = os.environ.get('TRAC_USER')
+TRAC_PASSWORD = os.environ.get('TRAC_PASSWORD')
+
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
