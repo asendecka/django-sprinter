@@ -1,5 +1,6 @@
 from django.db import models
 import sprinter.trac.const as trac
+from sprinter.userprofile.models import SprinterChange
 
 
 class Achievement(models.Model):
@@ -9,7 +10,7 @@ class Achievement(models.Model):
     """
 
     name = models.CharField('Achievement title', max_length=255)
-    description = models.CharField('Description', max_length=2000)
+    description = models.TextField('Description')
     picture = models.ImageField(upload_to='achievements', null=True)
     secret = models.BooleanField('Is secret achievement', default=False)
 
@@ -81,5 +82,19 @@ class Processor(object):
     def earned_achievements(self, sprinter_changes):
         return [achievement for achievement in self.achievements
                 if achievement.can_unlock(sprinter_changes)]
+
+    def grant(self, sprinters_and_changes):
+        for sprinter, sprinter_changes in sprinters_and_changes:
+            earned = self.earned_achievements(sprinter_changes)
+            sprinter.achievements = earned
+
+
+def process_achievements(sprinters):
+    achievements = Achievement.objects.all()
+    sprinters_and_changes = SprinterChange.objects.per_sprinter(sprinters)
+    processor = Processor(achievements)
+    processor.grant(sprinters_and_changes)
+
+
 
 

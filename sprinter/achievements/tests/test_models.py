@@ -102,6 +102,15 @@ class ProcessorTest(TestCase):
         earned = processor.earned_achievements(sprinter_changes)
         expect(earned) == [ok]
 
+    def test_grant(self):
+        ok = FakeAchievement(can_unlock=True)
+        not_ok = FakeAchievement(can_unlock=False)
+        processor = Processor([ok, not_ok])
+        sprinter = FakeSprinter()
+        sprinters_and_changes = [(sprinter, [])]
+        processor.grant(sprinters_and_changes)
+        expect(sprinter.achievements) == [ok]
+
 
 class FakeAchievement(object):
     def __init__(self, can_unlock=True, relevant=()):
@@ -111,3 +120,7 @@ class FakeAchievement(object):
     def can_unlock(self, sprinter_changes):
         return self._can_unlock
 
+
+class FakeSprinter(object):
+    def __init__(self):
+        self.achievements = []
