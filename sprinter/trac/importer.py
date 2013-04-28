@@ -43,7 +43,7 @@ class Importer(object):
             timestamp = self.standardize_datetime(time)
 
             if timestamp > last_recorded_timestamp:
-                ticket.changes.create(
+                ticket.changes.create(  # TODO:get_or_create!!!!
                     timestamp=timestamp, author=author, field=field,
                     old_value=old_value, new_value=new_value)
 
@@ -69,7 +69,7 @@ class Importer(object):
             except Sprinter.DoesNotExist:
                 continue
             frozen_ticket = change.ticket_snapshot()
-            sprinter.changes.create(
+            sprinter.changes.create( # TODO:get_or_create
                 ticket_change=change, field=change.field,
                 ticket_id=change.ticket_id, **frozen_ticket.attrs)
         return sprinters

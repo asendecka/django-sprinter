@@ -42,12 +42,6 @@ def new_users_handler(sender, user, response, details, **kwargs):
     Sprinter.objects.create(user=user)
 
 
-class SprinterChangeManager(models.Manager):
-    def per_sprinter(self, sprinters):
-        for sprinter in sprinters:
-            yield sprinter, sprinter.changes.all()
-
-
 class SprinterChange(models.Model):
     sprinter = models.ForeignKey(Sprinter, related_name='changes')
     ticket_change = models.OneToOneField('trac.Change', null=True, blank=True)
@@ -59,13 +53,16 @@ class SprinterChange(models.Model):
     ticket_id = models.IntegerField()
     field = models.CharField(max_length=250)
 
-    objects = SprinterChangeManager()
-
 
 class SprinterPull(models.Model):
     sprinter = models.ForeignKey(Sprinter, related_name='pulls')
     pull_request = models.OneToOneField(
         'github.PullRequest', null=True, blank=True)
+
+
+def per_sprinter(sprinters):
+    for sprinter in sprinters:
+        yield sprinter, sprinter.changes.all(), sprinter.pulls.all()
 
 
 

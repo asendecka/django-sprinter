@@ -1,7 +1,7 @@
 from django.test import TestCase
 from expecter import expect
 from sprinter.achievements.models import Achievement, Processor
-from sprinter.userprofile.models import SprinterChange
+from sprinter.userprofile.models import SprinterChange, SprinterPull
 
 
 class AchievementTest(TestCase):
@@ -91,6 +91,21 @@ class AchievementTest(TestCase):
         filtered = achievement.relevant_changes(changes)
         expect(filtered) == [ok]
 
+    def test_pull_request_count_ok(self):
+        achievement = Achievement(pull_request_count=2)
+        pull_requests = [SprinterPull(pk=1), SprinterPull(pk=2)]
+        expect(achievement.pull_request_count_ok(pull_requests)) == True
+
+    def test_pull_request_count_fail(self):
+        achievement = Achievement(pull_request_count=2)
+        pull_requests = [SprinterPull(pk=1)]
+        expect(achievement.pull_request_count_ok(pull_requests)) == False
+
+    def test_no_pull_request_count(self):
+        achievement = Achievement(pull_request_count=None)
+        pull_requests = []
+        expect(achievement.pull_request_count_ok(pull_requests)) == True
+
 
 class ProcessorTest(TestCase):
     def test_earns_only_unlockable_achievements(self):
@@ -99,7 +114,7 @@ class ProcessorTest(TestCase):
         achievements = [ok, not_ok]
         sprinter_changes = [SprinterChange()]
         processor = Processor(achievements)
-        earned = processor.earned_achievements(sprinter_changes)
+        earned = processor.earned_achievements(sprinter_changes, [])
         expect(earned) == [ok]
 
     def test_grant(self):
@@ -107,7 +122,7 @@ class ProcessorTest(TestCase):
         not_ok = FakeAchievement(can_unlock=False)
         processor = Processor([ok, not_ok])
         sprinter = FakeSprinter()
-        sprinters_and_changes = [(sprinter, [])]
+        sprinters_and_changes = [(sprinter, [], [])]
         processor.grant(sprinters_and_changes)
         expect(sprinter.achievements) == [ok]
 
@@ -117,7 +132,7 @@ class FakeAchievement(object):
         self._can_unlock = can_unlock
         self._relevant = set(relevant)
 
-    def can_unlock(self, sprinter_changes):
+    def can_unlock(self, sprinter_changes, sprinter_pulls):
         return self._can_unlock
 
 

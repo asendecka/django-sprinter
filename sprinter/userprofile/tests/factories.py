@@ -1,7 +1,8 @@
 import factory
 from django.contrib.auth.models import User
+from sprinter.github.tests.factories import PullRequestFactory
 from sprinter.trac.tests.factories import ChangeFactory
-from sprinter.userprofile.models import Sprinter, SprinterChange
+from sprinter.userprofile.models import Sprinter, SprinterChange, SprinterPull
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -31,3 +32,11 @@ class SprinterChangeFactory(factory.DjangoModelFactory):
     @factory.lazy_attribute
     def ticket_id(self):
         return self.ticket_change.ticket_id
+
+
+class SprinterPullFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = SprinterPull
+
+    sprinter = factory.SubFactory(SprinterFactory)
+
+    pull_request = factory.SubFactory(PullRequestFactory)

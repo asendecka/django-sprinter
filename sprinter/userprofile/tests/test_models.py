@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from expecter import expect
-from sprinter.userprofile.models import Sprinter, SprinterChange
+from sprinter.userprofile.models import Sprinter, SprinterChange, per_sprinter
 from sprinter.userprofile.tests.factories import SprinterFactory, \
-    SprinterChangeFactory
+    SprinterChangeFactory, SprinterPullFactory
 
 
 class SprinterManagerTest(TestCase):
@@ -22,11 +22,13 @@ class SprinterManagerTest(TestCase):
         expect(found) == sprinter
 
 
-class SprinterChangeManager(TestCase):
+class PerSprinterTest(TestCase):
     def test_per_sprinter(self):
         alice = SprinterFactory.create()
         change = SprinterChangeFactory.create(sprinter=alice)
-        generator = SprinterChange.objects.per_sprinter([alice])
-        sprinter, sprinter_changes = list(generator)[0]
+        pull = SprinterPullFactory.create(sprinter=alice)
+        generator = per_sprinter([alice])
+        sprinter, sprinter_changes, sprinter_pulls = list(generator)[0]
         expect(sprinter) == alice
         expect(list(sprinter_changes)) == [change]
+        expect(list(sprinter_pulls)) == [pull]

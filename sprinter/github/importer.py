@@ -1,11 +1,13 @@
 from collections import defaultdict
 from sprinter.github.models import PullRequest
-from sprinter.github.proxy import parse_datetime
+from sprinter.github.proxy import parse_datetime, Client
 from sprinter.userprofile.models import Sprinter, SprinterPull
 
 
 class Importer(object):
-    def __init__(self, client):
+    def __init__(self, client=None):
+        if client is None:
+            client = Client()
         self.client = client
 
     def sync(self, since):
@@ -23,12 +25,17 @@ class Importer(object):
             if created:
                 created_pull_requests[login].append(pr)
 
+        sprinters = []
+
         for login, pull_requests in created_pull_requests.iteritems():
             try:
                 sprinter = Sprinter.objects.get(github_login=login)
                 pulls = [SprinterPull(pull_request=pr) for pr in pull_requests]
                 sprinter.pulls.add(*pulls)
+                sprinters.append(sprinter)
             except Sprinter.DoesNotExist:
                 pass
+
+        return sprinters
 
 

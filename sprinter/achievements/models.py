@@ -1,6 +1,6 @@
 from django.db import models
 import sprinter.trac.const as trac
-from sprinter.userprofile.models import SprinterChange
+from sprinter.userprofile.models import SprinterChange, per_sprinter
 
 
 class Achievement(models.Model):
@@ -28,10 +28,11 @@ class Achievement(models.Model):
     component = models.CharField(
         max_length=250, choices=trac.COMPONENTS_CHOICES, blank=True)
 
-    def can_unlock(self, sprinter_changes):
+    def can_unlock(self, sprinter_changes, sprinter_pulls):
         return self.ticket_count_ok(sprinter_changes) and \
             self.comment_count_ok(sprinter_changes) and \
-            self.attachment_count_ok(sprinter_changes)
+            self.attachment_count_ok(sprinter_changes) and \
+            self.pull_request_count_ok(sprinter_pulls)
 
     def ticket_count_ok(self, sprinter_changes):
         tickets = {change.ticket_id for change in sprinter_changes}
@@ -60,6 +61,11 @@ class Achievement(models.Model):
         attachment_count = len(attachment_tickets)
         return self.attachment_count <= attachment_count
 
+    def pull_request_count_ok(self, sprinter_pulls):
+        if not self.pull_request_count:
+            return True
+        return self.pull_request_count <= len(sprinter_pulls)
+
     def relevant_changes(self, sprinter_changes):
         return [sc for sc in sprinter_changes if self.is_relevant(sc)]
 
@@ -79,19 +85,19 @@ class Processor(object):
     def __init__(self, achievements):
         self.achievements = achievements
 
-    def earned_achievements(self, sprinter_changes):
+    def earned_achievements(self, sprinter_changes, sprinter_pulls):
         return [achievement for achievement in self.achievements
-                if achievement.can_unlock(sprinter_changes)]
+                if achievement.can_unlock(sprinter_changes, sprinter_pulls)]
 
     def grant(self, sprinters_and_changes):
-        for sprinter, sprinter_changes in sprinters_and_changes:
-            earned = self.earned_achievements(sprinter_changes)
+        for sprinter, sprinter_changes, sprinter_pulls in sprinters_and_changes:
+            earned = self.earned_achievements(sprinter_changes, sprinter_pulls)
             sprinter.achievements = earned
 
 
 def process_achievements(sprinters):
     achievements = Achievement.objects.all()
-    sprinters_and_changes = SprinterChange.objects.per_sprinter(sprinters)
+    sprinters_and_changes = per_sprinter(sprinters)
     processor = Processor(achievements)
     processor.grant(sprinters_and_changes)
 
