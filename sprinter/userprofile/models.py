@@ -60,3 +60,12 @@ class SprinterChange(models.Model):
     field = models.CharField(max_length=250)
 
     objects = SprinterChangeManager()
+
+
+class SprinterPull(models.Model):
+    sprinter = models.ForeignKey(Sprinter, related_name='pulls')
+    pull_request = models.OneToOneField(
+        'github.PullRequest', null=True, blank=True)
+
+
+

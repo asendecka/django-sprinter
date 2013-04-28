@@ -110,6 +110,7 @@ INSTALLED_APPS = (
     'social_auth',
     'sprinter.userprofile',
     'sprinter.trac',
+    'sprinter.github',
     'sprinter.achievements',
 )
 
