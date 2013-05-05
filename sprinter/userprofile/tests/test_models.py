@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.contrib.auth.models import User
 from django.test import TestCase
 from expecter import expect
@@ -19,6 +20,13 @@ class SprinterManagerTest(TestCase):
         email = 'Alice@Example.com'
         sprinter = Sprinter.objects.create(user=self.user, trac_email=email)
         found = Sprinter.objects.get_by_trac_author(email.lower())
+        expect(found) == sprinter
+
+    def test_get_by_trac_author_full(self):
+        author = u'Alice Zażółć Gęślą Jaźń <alice@example.com>'
+        email = u'alice@example.com'
+        sprinter = Sprinter.objects.create(user=self.user, trac_email=email)
+        found = Sprinter.objects.get_by_trac_author(author)
         expect(found) == sprinter
 
 

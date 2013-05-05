@@ -1,9 +1,12 @@
+import re
 import hashlib
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Count, Q
 from django.dispatch import receiver
 from social_auth.signals import socialauth_registered
+
+TRAC_AUTHOR_EMAIL_RE = re.compile(r'<(\S+@\S+\.\S+)>')
 
 
 class SprinterManager(models.Manager):
@@ -12,8 +15,12 @@ class SprinterManager(models.Manager):
         return qs.order_by('-achievements_count')
 
     def get_by_trac_author(self, author):
-        by_login = Q(trac_login__iexact=author)
+        match = TRAC_AUTHOR_EMAIL_RE.search(author)
+        if match:
+            email = match.groups()[0]
+            return self.get(trac_email__iexact=email)
         by_email = Q(trac_email__iexact=author)
+        by_login = Q(trac_login__iexact=author)
         return self.get(by_email | by_login)
 
 
