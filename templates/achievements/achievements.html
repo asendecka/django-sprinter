@@ -2,50 +2,86 @@
 {% load url from future %}
 
 {% block title %}
-&minus; Achievements
+  &minus; Achievements
 {% endblock %}
 
 {% block content %}
-<div class="row">
-<div class="span12">
-<h1>Achievements</h1>
-<table class="table table-striped">
-    {% for achievement in achievements %}
-    <tr class="achievement">
-        <td class="achievement-icon">
-            <a href="{% url 'achievement' pk=achievement.pk %}">{% if achievement.picture %}<img src="{{ achievement.picture.url }}" title="{{ achievement }}" class="img-rounded size_64"/>{% endif %}</a>
-        </td>
-        <td>
-            <a href="{% url 'achievement' pk=achievement.pk %}">{{ achievement }}</a>
-        </td>
-        <td>
-            <p>
-                <dl class="dl-horizontal">
-                    {% if achievement.ticket_count %}<dt>ticket count</dt><dd>{{ achievement.ticket_count }}</dd>{% endif %}
-                    {% if achievement.comment_count %}<dt>comment count</dt><dd>{{ achievement.comment_count }}</dd>{% endif %}
-                    {% if achievement.attachement_count %}<dt>patch count</dt><dd>{{ achievement.patch_count }}</dd>{% endif %}
-                    {% if achievement.pull_request_count %}<dt>pull request count</dt><dd>{{ achievement.pull_request_count }}</dd>{% endif %}
-                    {% if achievement.get_ticket_type %}<dt>ticket type</dt><dd>{{ achievement.get_ticket_type }}</dd>{% endif %}
-                    {% if achievement.get_severity %}<dt>severity</dt><dd>{{ achievement.get_severity }}</dd>{% endif %}
-                    {% if achievement.get_resolution %}<dt>resolution</dt><dd>{{ achievement.get_resolution }}</dd>{% endif %}
-                    {% if achievement.get_component %}<dt>component</dt><dd>{{ achievement.get_component }}</dd>{% endif %}
-                </dl>
-            </p>
-        </td>
-        <td>
-            {% for sprinter in achievement.sprinter_set.all %}
-            <a href="{% url 'sprinter_detail' pk=sprinter.pk %}">{{ sprinter }}</a>{% if not forloop.last %}, {% endif %}
-            {% empty %}
+  <div class="row">
+    <div class="span12">
+      <h1>Achievements</h1>
+      <table class="table table-striped">
+        {% for achievement in achievements %}
+          {% url 'achievement_detail' pk=achievement.pk as achievement_url%}
+          <tr class="achievement">
+            <td class="achievement-icon">
+              <a href="{{ achievement_url }}">
+                {% if achievement.picture %}
+                  <img src="{{ achievement.picture.url }}"
+                      title="{{ achievement }}"
+                      class="img-rounded size_64"/>
+                {% endif %}
+              </a>
+            </td>
+
+            <td>
+              <a href="{{ achievement_url }}">{{ achievement }}</a>
+            </td>
+
+            <td>
+              <dl class="dl-horizontal">
+                {% if achievement.ticket_count %}
+                  <dt>ticket count</dt>
+                  <dd>{{ achievement.ticket_count }}</dd>
+                {% endif %}
+                {% if achievement.comment_count %}
+                  <dt>comment count</dt>
+                  <dd>{{ achievement.comment_count }}</dd>
+                {% endif %}
+                {% if achievement.attachement_count %}
+                  <dt>patch count</dt>
+                  <dd>{{ achievement.patch_count }}</dd>
+                {% endif %}
+                {% if achievement.pull_request_count %}
+                  <dt>pull request count</dt>
+                  <dd>{{ achievement.pull_request_count }}</dd>
+                {% endif %}
+                {% if achievement.get_ticket_type %}
+                  <dt>ticket type</dt>
+                  <dd>{{ achievement.get_ticket_type }}</dd>
+                {% endif %}
+                {% if achievement.get_severity %}
+                  <dt>severity</dt>
+                  <dd>{{ achievement.get_severity }}</dd>
+                {% endif %}
+                {% if achievement.get_resolution %}
+                  <dt>resolution</dt>
+                  <dd>{{ achievement.get_resolution }}</dd>
+                {% endif %}
+                {% if achievement.get_component %}
+                  <dt>component</dt>
+                  <dd>{{ achievement.get_component }}</dd>
+                {% endif %}
+              </dl>
+            </td>
+
+            <td>
+              {% for sprinter in achievement.sprinter_set.all %}
+                <a href="{% url 'sprinter_detail' pk=sprinter.pk %}">{{ sprinter }}</a>
+                {% if not forloop.last %}, {% endif %}
+              {% empty %}
                 No one unlocked this yet :(.
-            {% endfor %}
-        </td>
-    </tr>
-    {% endfor %}
-    <tr class="info">
-        <td><img src="{{ STATIC_URL }}/images/uncertainty.png" title="secret achievements" class="img-rounded size_64"/></td>
-        <td colspan="3">{{ secret_achievements.count }} secret achievements</td>
-    </tr>
-</table>
-</div>
-</div>
+              {% endfor %}
+            </td>
+          </tr>
+        {% endfor %}
+        <tr class="info">
+          <td>
+            <img src="{{ STATIC_URL }}/images/uncertainty.png" title="secret achievements" class="img-rounded size_64"/>
+          </td>
+          <td colspan="3">{{ secret_achievements.count }} secret achievements
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 {% endblock %}

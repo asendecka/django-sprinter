@@ -41,11 +41,13 @@ def home(request):
 
 
 def achievements(request):
-    achievements = Achievement.objects.filter(Q(secret=False) | Q(sprinter__isnull=False)).distinct()
-    secret_achievements = Achievement.objects.filter(secret=True, sprinter__isnull=True)
+    sprinter = request.user.sprinter
+    achievements_qs = Achievement.objects.filter(secret=False)
+    achievements_qs = achievements_qs.prefetch_related('sprinter_set__user')
+    secret_achievements_qs = sprinter.achievements.filter(secret=True)
 
     return render(request, 'achievements/achievements.html', {
-        'achievements': achievements,
-        'secret_achievements': secret_achievements,
+        'achievements': achievements_qs,
+        'secret_achievements': secret_achievements_qs,
         'active': 'achievements',
     })
