@@ -1,21 +1,76 @@
 {% extends 'base.html' %}
 
 {% block title %}
-&minus; Achievement: {{ achievement }}
+  &minus; Achievement: {{ achievement }}
 {% endblock %}
 
 {% block content %}
-<div class="frame-box">
-<div class="inner-box"><h1 id="achievement-name">{{ achievement }}</h1>
-    <div class="row">
-    <div class="span3 achievement-img">
-        {% if achievement.picture %}<img src="{{ achievement.picture.url }}" title="{{ achievement }}" class="img-rounded size_128"/>{% endif %}
+  <div class="frame-box">
+    <div class="inner-box"><h1 id="achievement-name">{{ achievement }}</h1>
+
+      <div class="row">
+        <div class="span2">
+          {% if achievement.picture %}
+            <img src="{{ achievement.picture.url }}"
+                title="{{ achievement }}"
+                class="img-rounded size_128"/>
+          {% endif %}
+        </div>
+
+        <div class="span8">
+          <h4>Description</h4>
+          <blockquote class="achievement-info">
+            <p class="lead">{{ achievement.description }}</p>
+          </blockquote>
+          {% if achievement_won or not achievement.secret %}
+            <h4>You get this achievement for</h4>
+            <ul>
+              {% if achievement.ticket_count %}
+                <li>
+                  Contributing to {{ achievement.ticket_count }}
+                  ticket{{ achievement.ticket_count|pluralize }}
+                </li>
+              {% endif %}
+              {% if achievement.comment_count %}
+                <li>Commenting on {{ achievement.comment_count }}
+                  ticket{{ achievement.comment_count|pluralize }}
+                </li>
+              {% endif %}
+              {% if achievement.attachment_count %}
+                <li>
+                  Sending patches for {{ achievement.attachment_count }}
+                  ticket{{ achievement.attachment_count|pluralize }}
+                </li>
+              {% endif %}
+
+              {% if achievement.severity or achievement.kind or achievement.component or achievement.resolution %}
+                <li>
+                  And mentioned ticket has to be:
+                  <ul>
+                    {% if achievement.severity %}
+                      <li>{{ achievement.severity }}</li>
+                    {% endif %}
+                    {% if achievement.component %}
+                      <li>{{ achievement.component }}</li>
+                    {% endif %}
+                    {% if achievement.kind %}
+                      <li>{{ achievement.kind }}</li>
+                    {% endif %}
+                    {% if achievement.resolution %}
+                      <li>{{ achievement.resolution }}</li>
+                    {% endif %}
+                  </ul>
+                </li>
+              {% endif %}
+
+              {% if achievement.pull_request_count %}
+                <li>Making {{ achievement.pull_request_count }} pull
+                  request{{ achievement.pull_request_count|pluralize }}</li>
+              {% endif %}
+            </ul>
+          {% endif %}
+        </div>
+      </div>
     </div>
-    <div class="span8">
-        <p class="lead">{{ achievement.description }}</p>
-    </div>
-    </div>
-    <small id="credits">Pictures from <a href="http://game-icons.net">game-icons.net</a></small>
-</div>
-</div>
+  </div>
 {% endblock %}

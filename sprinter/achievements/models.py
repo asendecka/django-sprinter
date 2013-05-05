@@ -14,7 +14,7 @@ class Achievement(models.Model):
     picture = models.ImageField(upload_to='achievements', null=True)
     secret = models.BooleanField(default=False)
 
-    ticket_count = models.IntegerField(default=1)
+    ticket_count = models.IntegerField(default=1, null=True, blank=True)
     attachment_count = models.IntegerField(null=True, blank=True)
     comment_count = models.IntegerField(null=True, blank=True)
     pull_request_count = models.IntegerField(null=True, blank=True)

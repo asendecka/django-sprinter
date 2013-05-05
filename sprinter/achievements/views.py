@@ -25,8 +25,14 @@ def sprinter_detail(request, pk):
 
 def achievement_detail(request, pk):
     achievement = get_object_or_404(Achievement, pk=pk)
+    achievement_won = False
+    if request.user.is_authenticated():
+        achievement_won = request.user.sprinter.achievements.filter(
+            pk=achievement.pk
+        ).exists()
     return render(request, 'achievements/achievement_detail.html', {
         'achievement': achievement,
+        'achievement_won': achievement_won,
         'active': 'achievements',
     })
 
