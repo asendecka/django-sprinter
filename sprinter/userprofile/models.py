@@ -3,8 +3,6 @@ import hashlib
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Count, Q
-from django.dispatch import receiver
-from social_auth.signals import socialauth_registered
 
 TRAC_AUTHOR_EMAIL_RE = re.compile(r'<(\S+@\S+\.\S+)>')
 
@@ -42,11 +40,6 @@ class Sprinter(models.Model):
 
     def __unicode__(self):
         return self.user.username
-
-
-@receiver(socialauth_registered)
-def new_users_handler(sender, user, response, details, **kwargs):
-    Sprinter.objects.create(user=user)
 
 
 class SprinterChange(models.Model):
