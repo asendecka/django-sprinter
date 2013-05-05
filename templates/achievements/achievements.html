@@ -8,7 +8,8 @@
 {% block content %}
   <div class="row">
     <div class="span12">
-      <h1>Achievements</h1>
+    <div class="frame-box">
+    <div class="inner-box"><h1>Achievements</h1>
       <table class="table table-striped">
         {% for achievement in achievements %}
           {% url 'achievement_detail' pk=achievement.pk as achievement_url%}
@@ -23,7 +24,7 @@
               </a>
             </td>
 
-            <td>
+            <td class="achievement-name">
               <a href="{{ achievement_url }}">{{ achievement }}</a>
             </td>
 
@@ -82,6 +83,8 @@
           </td>
         </tr>
       </table>
+    </div>
+    </div>
     </div>
   </div>
 {% endblock %}

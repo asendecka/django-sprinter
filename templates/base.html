@@ -1,43 +1,69 @@
+<!DOCTYPE html>
 {% load compress staticfiles %}
 {% load url from future %}
-<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>Django Sprinter {% block title %}{% endblock %}</title>
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
-    <link href='http://fonts.googleapis.com/css?family=Text+Me+One&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/sprinter.css" type="text/css" media="screen, projection">
+
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css'%}" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css">
     {% block css %}
-    {% compress css %}
-    {% endcompress %}
+        {% compress css %}
+            <link rel="stylesheet" href="{% static 'css/sprinter.css'%}" type="text/css">
+        {% endcompress %}
     {% endblock %}
 </head>
 
 <body>
-    <div class='container'>
-        {% block navigation %}
-        <ul class="nav nav-pills menu">
-            <li {% if active == 'board' %}class="active"{% endif %}><a href="{% url 'board' %}">Ranking</a></li>
-            <li {% if active == 'achievements' %}class="active"{% endif %}><a href="{% url 'achievements' %}">Achievements</a></li>
-            {% if user.is_authenticated %}
-                <li {% if active == 'home' %}class="active"{% endif %}><a href="{% url 'home' %}">My score</a></li>
-                <li {% if active == 'edit' %}class="active"{% endif %}><a href="{% url 'edit_profile' %}">Edit profile</a></li>
-                <li><a class="btn" href="{% url 'signout' %}">Sign out</a></li>
-            {% else %}
-                <li><a class="btn" href="{% url 'signin' %}">Join</a></li>
-            {% endif %}
-        </ul>
-        {% endblock %}
-        {% block content %}
-        {% endblock %}
+<div id="circus">&nbsp;</div>
+{% block navigation %}
+    <div class="navbar navbar-inverse navbar-static-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <ul class="nav">
+                    <li {% if active == 'board' %}class="active"{% endif %}>
+                        <a href="{% url 'board' %}">Ranking</a>
+                    </li>
+                    <li {% if active == 'achievements' %}class="active"{% endif %}>
+                        <a href="{% url 'achievements' %}">Achievements</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li {% if active == 'home' %}class="active"{% endif %}>
+                            <a href="{% url 'home' %}">My score</a>
+                        </li>
+                        <li {% if active == 'edit' %}class="active"{% endif %}>
+                            <a href="{% url 'edit_profile' %}">Edit profile</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'signout' %}">Sign out</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'signin' %}">Join</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </div>
+{% endblock %}
 
-    {% block js %}
+<div id="page">
+    <div class='container'>
+        <div id="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+{% block js %}
+    <script src="http://code.jquery.com/jquery.js"></script>
     {% compress js %}
+        <script src="{% static 'bootstrap/js/bootstrap.min.js'%}"></script>
     {% endcompress %}
-    {% endblock %}
+{% endblock %}
 </body>
 </html>

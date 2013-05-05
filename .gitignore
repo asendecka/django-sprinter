@@ -5,4 +5,5 @@
 # django collected static files
 public/
 media/
+.DS_Store
 

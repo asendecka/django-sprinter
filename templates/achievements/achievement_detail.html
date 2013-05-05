@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ achievement }}</h1>
+<div class="frame-box">
+<div class="inner-box"><h1 id="achievement-name">{{ achievement }}</h1>
     <div class="row">
     <div class="span2">
         {% if achievement.picture %}<img src="{{ achievement.picture.url }}" title="{{ achievement }}" class="img-rounded size_128"/>{% endif %}
@@ -16,4 +17,6 @@
     </blockquote>
     </div>
     </div>
+</div>
+</div>
 {% endblock %}

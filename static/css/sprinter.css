@@ -1,8 +1,28 @@
-h1, h2, h3, h4, h5, a {
-    font-family: "Text Me One";
-    font-weight: bold;
-    margin-top: 36px;
+@font-face {
+    font-family: "RiotSquad";
+    font-style: normal;
+    font-weight: normal;
+    src: url("../font/RiotSquadNF.ttf") format("truetype");
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: "Lato", Verdana, sans-serif;
+    margin-top: 32px;
     margin-bottom: 36px;
+}
+
+h1 {
+    font-family: "RiotSquad";
+    background: url("../images/header.png") no-repeat;
+    width: 403px;
+    height: 67px;
+    padding-top: 15px;
+    padding-left: 33px;
+    margin-top: -45px;
+}
+
+h1#achievement-name {
+    background: url("../images/header_long.png") no-repeat;
 }
 
 .achievement-list li {
@@ -15,13 +35,13 @@ h1, h2, h3, h4, h5, a {
 }
 
 img.size_64 {
-    height: 64px; 
-    width: 64px; 
+    height: 64px;
+    width: 64px;
 }
 
 img.size_128 {
-    height: 128px; 
-    width: 128px; 
+    height: 128px;
+    width: 128px;
 }
 
 .table .score {
@@ -59,9 +79,81 @@ img.size_128 {
 }
 
 .achievement-icon, .sprinter-icon {
-    min-width: 66px;
+    width: 66px;
+}
+
+.rank {
+    width: 66px;
 }
 
 #ranking {
     min-height: 500px;
+}
+
+body {
+    background: url("../images/rainbow_fish.png") #fcfdf1 no-repeat scroll 0 0;
+}
+
+
+#circus {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: url("../images/circus_clouds.png") no-repeat scroll 0 0;
+    width: 664px;
+    height: 660px;
+}
+
+#page {
+    position: relative;
+    margin-top: 0px;
+    margin-bottom: 32px;
+    padding: 20px;
+}
+
+#content {
+    margin-top: 40px;
+}
+
+.frame-box {
+    background: url("../images/popup.png") no-repeat scroll -2px -10px;
+
+    border-right: 8px solid #172423;
+    padding-left: 12px;
+}
+
+.inner-box {
+    border-top: 6px solid #172423;
+    border-bottom: 6px solid #172423;
+    background-color: #fcfdf1;
+    border-left: 18px solid #172423;
+    padding: 12px;
+    min-height: 500px;
+}
+
+#credits {
+    position: absolute;
+    bottom: 30px;
+}
+
+.table-striped tbody > tr:nth-child(odd) > td, .table-striped tbody > tr:nth-child(odd) > th {
+    background-color: #fcfdf1;
+}
+
+a {
+    color: #d01e32;
+    font-family: "Lato", Verdana, sans-serif;
+}
+
+.achievement-name a {
+    font-size: 14pt;
+    line-height: 32pt;
+}
+
+.table tbody tr.info > td {
+    background-color: #dad9a4;
+}
+
+.navbar-inverse ul.nav li a {
+    color: #dad9a4;
 }

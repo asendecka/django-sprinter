@@ -8,7 +8,8 @@
 {% block content %}
 <div class="row">
 <div class="span12" id="ranking">
-<h1>Ranking</h1>
+<div class="frame-box">
+<div class="inner-box"><h1>Ranking</h1>
 <table class="table table-striped">
     {% for sprinter in sprinters %}
     <tr class="sprinter">
@@ -33,8 +34,12 @@
     {% empty %}
     <p class="lead">Let the game begin! <a href="{% url 'signin' %}">Join</a>, code and gain eternal fame as a Django fixer.</p>
     {% endfor %}
+
 </table>
+<small id="credits">Pictures from <a href="http://game-icons.net">game-icons.net</a></small>
 </div>
 </div>
-<small>Pictures from <a href="http://game-icons.net">game-icons.net</a></small>
+</div>
+</div>
+
 {% endblock %}
