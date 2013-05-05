@@ -5,14 +5,17 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Sign in</h1>
+    <div class="frame-box">
+    <div class="inner-box"><h1>Sign in</h1>
     <div class="row">
         <div class="span4">
             <ul class="unstyled">
-                <li><a class="btn" href="{% url 'socialauth_begin' 'twitter' %}">Twitter</a></li>
-                <li><a class="btn" href="{% url 'socialauth_begin' 'github' %}">Github</a></li>
-                <li><a class="btn" href="{% url 'socialauth_begin' 'google' %}">Google Account</a></li>
+                <li><a class="btn sign-in twitter" href="{% url 'socialauth_begin' 'twitter' %}">Twitter</a></li>
+                <li><a class="btn sign-in github" href="{% url 'socialauth_begin' 'github' %}">Github</a></li>
+                <li><a class="btn sign-in google" href="{% url 'socialauth_begin' 'google' %}">Google Account</a></li>
             </ul>
         </div>
+    </div>
+    </div>
     </div>
 {% endblock %}

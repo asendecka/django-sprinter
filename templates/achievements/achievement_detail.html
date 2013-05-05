@@ -8,15 +8,14 @@
 <div class="frame-box">
 <div class="inner-box"><h1 id="achievement-name">{{ achievement }}</h1>
     <div class="row">
-    <div class="span2">
+    <div class="span3 achievement-img">
         {% if achievement.picture %}<img src="{{ achievement.picture.url }}" title="{{ achievement }}" class="img-rounded size_128"/>{% endif %}
     </div>
     <div class="span8">
-    <blockquote class="achievement-info">
         <p class="lead">{{ achievement.description }}</p>
-    </blockquote>
     </div>
     </div>
+    <small id="credits">Pictures from <a href="http://game-icons.net">game-icons.net</a></small>
 </div>
 </div>
 {% endblock %}

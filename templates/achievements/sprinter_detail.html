@@ -21,16 +21,19 @@
     <table class="table table-striped">
     {% for achievement in sprinter.achievements.all %}
     <tr class="achievement">
-            <td class="achievement-name">{{ achievement.name }}</td>
             <td class="achievement-icon">
                 <a href="{% url 'sprinter.achievements.views.achievement_detail' pk=achievement.pk %}">{% if achievement.picture %}<img src="{{ achievement.picture.url }}" title="{{ achievement }}" class="img-rounded size_64"/>{% endif %}</a>
             </td>
+            {% url 'achievement_detail' pk=achievement.pk as achievement_url%}
+            <td class="achievement-name"><a href="{{ achievement_url }}">{{ achievement.name }}</a></td>
+
             <td>{{ achievement.description }}</td>
         </tr>
     {% empty %}
         <p>No achievements yet :(.</p>
     {% endfor %}
 </table>
+<small id="credits">Pictures from <a href="http://game-icons.net">game-icons.net</a></small>
 </div>
 </div>
 {% endblock %}

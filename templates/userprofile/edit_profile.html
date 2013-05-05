@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Edit your details</h1>
+    <div class="frame-box">
+    <div class="inner-box"><h1>Profile</h1>
     {% if saved %}
     <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert">×</button>
@@ -13,11 +14,11 @@
     </div>
     {% endif %}
     <div class="row">
-        <div class="span4">
-            <p>Please fill details below: </p>
+        <div class="span4 profile">
+            <p class="lead">Please fill details below: </p>
             <form id="" method="POST">{% csrf_token %}
                 {{ form }}<br/>
-                <input type="submit" value="Save" class="btn btn-primary"/>
+                <input type="submit" value="Save" class="btn purple"/>
             </form>
         </div>
         <div class="span4">
@@ -26,5 +27,7 @@
             for Trac (probably there is more for the latter).
             </p>
         </div>
+    </div>
+    </div>
     </div>
 {% endblock %}

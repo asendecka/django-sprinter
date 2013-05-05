@@ -22,7 +22,7 @@ h1 {
 }
 
 h1#achievement-name {
-    background: url("../images/header_long.png") no-repeat;
+    background: url("../images/header_longer.png") no-repeat;
 }
 
 .achievement-list li {
@@ -75,7 +75,7 @@ img.size_128 {
 }
 
 .avatar {
-    margin-top: 36px;
+    margin-bottom: 36px;
 }
 
 .achievement-icon, .sprinter-icon {
@@ -156,4 +156,41 @@ a {
 
 .navbar-inverse ul.nav li a {
     color: #dad9a4;
+}
+
+.achievement-img {
+    text-align: center;
+}
+
+.sign-in {
+    margin-bottom: 10px;
+    margin-left: 20px;
+}
+
+.btn.twitter, .twitter:hover, .twitter:focus, .twitter:active, .twitter.active {
+    color: #ffffff;
+    background: none #00a79d;
+    text-shadow: none;
+}
+
+.btn.github, .github:hover, .github:focus, .github:active, .github.active, .purple {
+    color: #ffffff;
+    background: none #da1c5c;
+    text-shadow: none;
+}
+
+.btn.google, .google:hover, .google:focus, .google:active, .google.active {
+    color: #ffffff;
+    background: none #a7c817;
+    text-shadow: none;
+}
+
+.profile {
+    margin-left: 54px;
+}
+
+.alert-success {
+    color: #6e840f;
+    background-color: rgb(241, 255, 234);
+    border-color: #d6e9c6;
 }
