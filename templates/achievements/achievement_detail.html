@@ -9,7 +9,7 @@
     <div class="inner-box"><h1 id="achievement-name">{{ achievement }}</h1>
 
       <div class="row">
-        <div class="span2">
+        <div class="span3 achievement-img">
           {% if achievement.picture %}
             <img src="{{ achievement.picture.url }}"
                 title="{{ achievement }}"
@@ -19,9 +19,8 @@
 
         <div class="span8">
           <h4>Description</h4>
-          <blockquote class="achievement-info">
-            <p class="lead">{{ achievement.description }}</p>
-          </blockquote>
+
+          <p class="lead">{{ achievement.description }}</p>
           {% if achievement_won or not achievement.secret %}
             <h4>You get this achievement for</h4>
             <ul>
