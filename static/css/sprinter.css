@@ -5,10 +5,10 @@
     src: url("../font/RiotSquadNF.ttf") format("truetype");
 }
 
-h1, h2, h3, h4, h5 {
+h2, h3, h4, h5 {
     font-family: "Lato", Verdana, sans-serif;
-    margin-top: 32px;
-    margin-bottom: 36px;
+    color: #00a79d;
+    font-weight: normal;
 }
 
 h1 {
