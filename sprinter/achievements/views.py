@@ -7,6 +7,8 @@ from sprinter.userprofile.models import Sprinter
 
 def board(request):
     sprinters = Sprinter.objects.with_achievement_counts()
+    sprinters = sprinters.select_related('user')
+    sprinters = sprinters.prefetch_related('achievements')
     return render(request, 'achievements/board.html', {
         'sprinters': sprinters,
         'active': 'board',
