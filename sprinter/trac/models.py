@@ -64,3 +64,6 @@ class TimeFrozenTicket(object):
 
 class ImportRun(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
+
+    def __unicode__(self):
+        return self.timestamp.isoformat(' ')

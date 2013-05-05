@@ -3,6 +3,6 @@ from sprinter.github.models import PullRequest
 
 
 class PullRequestAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('number', 'login', 'created_at')
 
 admin.site.register(PullRequest, PullRequestAdmin)

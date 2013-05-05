@@ -12,7 +12,7 @@ class Achievement(models.Model):
     name = models.CharField('Achievement title', max_length=255)
     description = models.TextField('Description')
     picture = models.ImageField(upload_to='achievements', null=True)
-    secret = models.BooleanField('Is secret achievement', default=False)
+    secret = models.BooleanField(default=False)
 
     ticket_count = models.IntegerField(default=1)
     attachment_count = models.IntegerField(null=True, blank=True)
