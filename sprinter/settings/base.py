@@ -153,6 +153,8 @@ LOGGING = {
     }
 }
 
+ALLOWED_HOSTS = ['*']
+
 AUTH_PROFILE_MODULE = 'userprofile.Sprinter'
 
 AUTHENTICATION_BACKENDS = (
