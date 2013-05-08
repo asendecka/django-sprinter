@@ -16,7 +16,7 @@ framework.
 import os
 import sef
 
-env_file_name = os.path.join(os.path.dirname(__file__), '.env')
+env_file_name = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
 sef.set_defaults(env_file_name)
 
 # This application object is used by any WSGI server configured to use this
