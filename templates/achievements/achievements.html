@@ -33,7 +33,7 @@
                 <a href="{% url 'sprinter_detail' pk=sprinter.pk %}">{{ sprinter }}</a>
                 {% if not forloop.last %}, {% endif %}
               {% empty %}
-                No one unlocked this yet :(.
+                No one unlocked it yet :(.
               {% endfor %}
             </td>
           </tr>
