@@ -109,6 +109,7 @@ INSTALLED_APPS = (
     'compressor',
     'south',
     'social_auth',
+    'raven.contrib.django.raven_compat',
     'sprinter.userprofile',
     'sprinter.trac',
     'sprinter.github',
@@ -179,3 +180,7 @@ TRAC_PASSWORD = os.environ.get('TRAC_PASSWORD')
 
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
+
+RAVEN_CONFIG = {
+    'dsn': os.environ.get('RAVEN_DSN'),
+}
