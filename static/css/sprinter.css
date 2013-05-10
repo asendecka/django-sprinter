@@ -200,3 +200,8 @@ a {
     background-color: rgb(241, 255, 234);
     border-color: #d6e9c6;
 }
+
+td.achievement-name {
+    width: 220px;
+    line-height: 64px;
+}
