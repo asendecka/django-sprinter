@@ -22,7 +22,7 @@ h1 {
     font-size: 36px;
 }
 
-h1#achievement-name {
+h1#achievement-name, h1#user-name {
     background: url("../images/header_longer.png") no-repeat;
 }
 
