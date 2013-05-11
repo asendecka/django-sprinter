@@ -11,7 +11,7 @@
 <div class="span12">
 <div class="frame-box">
 <div class="inner-box">
-    <h1>{{ sprinter }}</h1>
+    <h1 id="user-name">{{ sprinter }}</h1>
     <div class="span2 avatar">
         {% if sprinter.get_email_hash %}
         <img class="img-rounded" src="http://www.gravatar.com/avatar/{{ sprinter.get_email_hash }}?s=128"/></a>
