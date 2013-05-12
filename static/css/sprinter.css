@@ -45,6 +45,11 @@ img.size_128 {
     width: 128px;
 }
 
+img.size_200 {
+    height: 200px;
+    width: 200px;
+}
+
 .table .score {
     font-size: 36pt;
     line-height: 64px;
