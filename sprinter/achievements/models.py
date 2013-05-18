@@ -29,9 +29,10 @@ class Achievement(models.Model):
         max_length=250, choices=trac.COMPONENTS_CHOICES, blank=True)
 
     def can_unlock(self, sprinter_changes, sprinter_pulls):
-        return self.ticket_count_ok(sprinter_changes) and \
-            self.comment_count_ok(sprinter_changes) and \
-            self.attachment_count_ok(sprinter_changes) and \
+        relevant_changes = self.relevant_changes(sprinter_changes)
+        return self.ticket_count_ok(relevant_changes) and \
+            self.comment_count_ok(relevant_changes) and \
+            self.attachment_count_ok(relevant_changes) and \
             self.pull_request_count_ok(sprinter_pulls)
 
     def ticket_count_ok(self, sprinter_changes):
